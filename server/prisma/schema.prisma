@@ -1,0 +1,87 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                 String     @id @default(cuid())
+  username           String     @unique
+  first_name         String
+  last_name          String
+  password           String
+  state              EState
+  created_at         DateTime   @default(now())
+  updated_at         DateTime   @updatedAt
+  created_by_id      String?
+  created_by         User?      @relation("UserCreatedBy", fields: [created_by_id], references: [id])
+  created_users      User[]     @relation("UserCreatedBy")
+  created_categories Category[] @relation("CategoryCreatedBy")
+
+  created_products Product[] @relation("ProductCreatedBy")
+
+  operations_log OperationsLog[]
+}
+
+model OperationsLog {
+  id         String     @id @default(cuid())
+  user_id    String
+  user       User       @relation(fields: [user_id], references: [id])
+  operation  EOperation
+  entity     EEntity
+  entity_id  String
+  created_at DateTime   @default(now())
+}
+
+model Category {
+  id            String   @id @default(cuid())
+  name          String
+  description   String?
+  state         EState
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by_id String?
+  created_by    User?    @relation("CategoryCreatedBy", fields: [created_by_id], references: [id])
+
+  parent_category_id String?
+  parent_category    Category?  @relation("CategorySubcategories", fields: [parent_category_id], references: [id])
+  subcategories      Category[] @relation("CategorySubcategories")
+
+  products Product[] @relation("ProductCategory")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  state       EState
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  created_by_id String?
+  created_by    User?   @relation("ProductCreatedBy", fields: [created_by_id], references: [id])
+
+  category_id String?
+  category    Category? @relation("ProductCategory", fields: [category_id], references: [id])
+}
+
+enum EState {
+  ACTIVE
+  INACTIVE
+}
+
+enum EOperation {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum EEntity {
+  USER
+  CATEGORY
+  PRODUCT
+}

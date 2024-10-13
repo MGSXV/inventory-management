@@ -1,0 +1,30 @@
+services:
+  inventory-management-server:
+    image: inventory-management-server
+    container_name: inventory-management-server
+    build:
+      context: ./server
+    env_file:
+      - ./server/.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server/src:/app/src:rw
+      - ./server/prisma:/app/prisma:rw
+
+  inventory-management-database:
+    image: postgres:17-alpine
+    container_name: inventory-management-database
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - database:/var/lib/postgresql/data
+
+# networks:
+#   - server-side: {}
+
+volumes:
+  - database: {}
