@@ -11,20 +11,24 @@ services:
     volumes:
       - ./server/src:/app/src:rw
       - ./server/prisma:/app/prisma:rw
+    # networks:
+    #   - server-side
 
-  inventory-management-database:
-    image: postgres:17-alpine
-    container_name: inventory-management-database
-    restart: always
-    env_file:
-      - ./.env
-    ports:
-      - "5432:5432"
-    volumes:
-      - database:/var/lib/postgresql/data
+#   inventory-management-database:
+#     image: postgres:17-alpine
+#     container_name: inventory-management-database
+#     restart: always
+#     env_file:
+#       - ./.env
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - database:/var/lib/postgresql/data
+#     networks:
+#       - server-side
 
 # networks:
 #   - server-side: {}
 
-volumes:
-  - database: {}
+# volumes:
+#   - database: {}

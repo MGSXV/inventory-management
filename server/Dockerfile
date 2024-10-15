@@ -12,9 +12,9 @@ npm install -g ts-node
 npm i --save-dev webpack webpack-cli webpack-node-externals ts-loader run-script-webpack-plugin
 EOF
 
-# RUN <<EOF
-# npx prisma generate
-# EOF
+RUN <<EOF
+npx prisma generate
+EOF
 
 COPY . .
 
