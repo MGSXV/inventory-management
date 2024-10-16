@@ -51,6 +51,7 @@ export class AuthController {
 		}
 	}
 
+	@Public()
 	@UseGuards(RtGuard)
 	@Post('refresh')
 	@HttpCode(HttpStatus.OK)

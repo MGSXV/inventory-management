@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto';
 import { hashData } from 'src/common';
+import { LOGOUT } from 'src/common/errors/logout.error';
 
 @Injectable()
 export class UserService {
@@ -42,17 +43,21 @@ export class UserService {
 	}
 
 	async deleteRefreshToken(user_id: string) {
-		return this.prisma.user.update({
-			where: {
-				id: user_id,
-				hashed_refresh_token: {
-					not: null
+		try {
+			return this.prisma.user.update({
+				where: {
+					id: user_id,
+					hashed_refresh_token: {
+						not: null
+					}
+				},
+				data: {
+					hashed_refresh_token: null
 				}
-			},
-			data: {
-				hashed_refresh_token: null
-			}
-		})
+			});
+		} catch (error) {
+			throw new Error(`LOGOUT.${LOGOUT.NO_TOKEN}`);
+		}
 	}
 
 }

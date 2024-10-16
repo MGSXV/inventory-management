@@ -81,9 +81,11 @@ export class AuthService {
 	}
 
 	async logout(user_id: string) {
-		const user = await this.userService.deleteRefreshToken(user_id);
-		if (!user)
-			throw new ForbiddenException(`LOGOUT.INVALID_TOKEN.${LOGOUT.INVALID_TOKEN}`);
+		try {
+			await this.userService.deleteRefreshToken(user_id);
+		} catch (error) {
+			throw new ForbiddenException(`LOGOUT.${LOGOUT.NO_TOKEN}`);
+		}
 		return true;
 	}
 
