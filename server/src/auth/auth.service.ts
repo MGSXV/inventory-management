@@ -41,6 +41,12 @@ export class AuthService {
 
 	async signupLocal(dto: AuthDto): Promise<Token> {
 
+		const already_exists = await this.userService.findByUsername(dto.username) !== null;
+
+		if (already_exists) {
+			throw new Error('SIGNUP.USERNAME_ALREADY_EXISTS');
+		}
+
 		const hash = await hashData(dto.password);
 		const new_user = await this.prisma.user.create({
 			data: {
