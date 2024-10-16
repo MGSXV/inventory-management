@@ -92,10 +92,10 @@ export class AuthService {
 	async refreshTokens(user_id: string, rt: string): Promise<Token> {
 		const user = await this.userService.findOneByID(user_id);
 		if (!user)
-			throw new ForbiddenException(`AUTH.ACCESS_DENIED.${AUTH.ACCESS_DENIED}`);
+			throw new ForbiddenException(`AUTH.${AUTH.ACCESS_DENIED}`);
 		const is_valid = await compareData(rt, user.hashed_refresh_token || '');
 		if (!is_valid)
-			throw new ForbiddenException(`AUTH.ACCESS_DENIED.${AUTH.ACCESS_DENIED}`);
+			throw new ForbiddenException(`AUTH.${AUTH.ACCESS_DENIED}`);
 		const tokens = await this.getTokens(user.id, user.username);
 		this.userService.updateRefreshToken(user.id, tokens.refresh_token);
 		return tokens
