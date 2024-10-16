@@ -8,6 +8,12 @@ export class UserService {
 
 	constructor(private prisma: PrismaService) {}
 
+	async findOneByID(id: string) {
+		return this.prisma.user.findUnique({
+			where: { id }
+		});
+	}
+
 	async update(user: UpdateUserDto) {
 		return this.prisma.user.update({
 			where: { id: user.id },
@@ -33,6 +39,20 @@ export class UserService {
 		return this.prisma.user.findUnique({
 			where: { username }
 		});
+	}
+
+	async deleteRefreshToken(user_id: string) {
+		return this.prisma.user.update({
+			where: {
+				id: user_id,
+				hashed_refresh_token: {
+					not: null
+				}
+			},
+			data: {
+				hashed_refresh_token: null
+			}
+		})
 	}
 
 }

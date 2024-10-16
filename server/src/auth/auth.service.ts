@@ -1,11 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { EState, hashData } from 'src/common';
+import { EState } from 'src/common/enums';
 import { AuthDto, LoginDto } from './dto';
 import { Token } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import { compareData } from 'src/common/lib/hash';
+import { compareData, hashData } from 'src/common/lib/';
 
 @Injectable()
 export class AuthService {
@@ -78,12 +78,20 @@ export class AuthService {
 		return tokens
 	}
 
-	async logout() {
-		return 'logout';
+	async logout(user_id: string) {
+		return this.userService.deleteRefreshToken(user_id);
 	}
 
-	async refreshTokens() {
-		return 'refresh tokens';
+	async refreshTokens(user_id: string, rt: string): Promise<Token> {
+		const user = await this.userService.findOneByID(user_id);
+		if (!user)
+			throw new ForbiddenException('AUTH.ACCESS_DENIED');
+		const is_valid = await compareData(rt, user.hashed_refresh_token || '');
+		if (!is_valid)
+			throw new ForbiddenException('AUTH.ACCESS_DENIED');
+		const tokens = await this.getTokens(user.id, user.username);
+		this.userService.updateRefreshToken(user.id, tokens.refresh_token);
+		return tokens
 	}
 
 }
