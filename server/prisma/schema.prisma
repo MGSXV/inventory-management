@@ -9,19 +9,48 @@ generator client {
 
 model User {
   id                   String      @id @default(cuid())
-  username             String   @unique
+  username             String      @unique
   first_name           String
   last_name            String
   password             String
   state                EState
   hashed_refresh_token String?
-  created_at           DateTime @default(now())
-  updated_at           DateTime @updatedAt
+  created_at           DateTime    @default(now())
+  updated_at           DateTime    @updatedAt
   created_by_id        String?
-  created_by           User?    @relation("UserCreatedBy", fields: [created_by_id], references: [id])
-  created_users        User[]   @relation("UserCreatedBy")
+  created_by           User?       @relation("UserCreatedBy", fields: [created_by_id], references: [id])
+  created_users        User[]      @relation("UserCreatedBy")
+  DepotCreatedBy       Depot[]     @relation("DepotCreatedBy")
+  depots               Depot[]
+  UserDepot            UserDepot[]
 
   @@map("users")
+}
+
+model Depot {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  state       EState
+  image_url   String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  created_by_id String?
+  created_by    User?       @relation("DepotCreatedBy", fields: [created_by_id], references: [id])
+  users         User[]
+  UserDepot     UserDepot[]
+
+  @@map("depots")
+}
+
+model UserDepot {
+  user_id  String
+  depot_id String
+  user     User   @relation(fields: [user_id], references: [id])
+  depot    Depot  @relation(fields: [depot_id], references: [id])
+
+  @@id([user_id, depot_id])
 }
 
 enum EState {
