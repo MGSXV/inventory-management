@@ -6,6 +6,8 @@ import { Token } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { compareData, hashData } from 'src/common/lib/';
+import { AUTH, SIGNIN, SIGNUP } from 'src/common/errors';
+import { LOGOUT } from 'src/common/errors/logout.error';
 
 @Injectable()
 export class AuthService {
@@ -45,7 +47,7 @@ export class AuthService {
 		const already_exists = await this.userService.findByUsername(dto.username) !== null;
 
 		if (already_exists) {
-			throw new Error('SIGNUP.USERNAME_ALREADY_EXISTS');
+			throw new Error(`SIGNUP.USERNAME.${SIGNUP.USERNAME.ALREADY_EXISTS}`);
 		}
 
 		const hash = await hashData(dto.password);
@@ -67,11 +69,11 @@ export class AuthService {
 
 		const user = await this.userService.findByUsername(dto.username);
 		if (!user) {
-			throw new Error('SIGNIN.USER_NOT_FOUND');
+			throw new Error(`SIGNIN.USERNAME.${SIGNIN.USERNAME.NOT_FOUND}`);
 		}
 		const is_valid = await compareData(dto.password, user.password);
 		if (!is_valid) {
-			throw new ForbiddenException('SIGNIN.INVALID_PASSWORD');
+			throw new ForbiddenException(`SIGNIN.PASSWORD.${SIGNIN.PASSWORD.INVALID}`);
 		}
 		const tokens = await this.getTokens(user.id, user.username);
 		this.userService.updateRefreshToken(user.id, tokens.refresh_token);
@@ -79,16 +81,19 @@ export class AuthService {
 	}
 
 	async logout(user_id: string) {
-		return this.userService.deleteRefreshToken(user_id);
+		const user = await this.userService.deleteRefreshToken(user_id);
+		if (!user)
+			throw new ForbiddenException(`LOGOUT.INVALID_TOKEN.${LOGOUT.INVALID_TOKEN}`);
+		return true;
 	}
 
 	async refreshTokens(user_id: string, rt: string): Promise<Token> {
 		const user = await this.userService.findOneByID(user_id);
 		if (!user)
-			throw new ForbiddenException('AUTH.ACCESS_DENIED');
+			throw new ForbiddenException(`AUTH.ACCESS_DENIED.${AUTH.ACCESS_DENIED}`);
 		const is_valid = await compareData(rt, user.hashed_refresh_token || '');
 		if (!is_valid)
-			throw new ForbiddenException('AUTH.ACCESS_DENIED');
+			throw new ForbiddenException(`AUTH.ACCESS_DENIED.${AUTH.ACCESS_DENIED}`);
 		const tokens = await this.getTokens(user.id, user.username);
 		this.userService.updateRefreshToken(user.id, tokens.refresh_token);
 		return tokens
