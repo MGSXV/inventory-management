@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EState, hashData } from 'src/common';
-import { AuthDto } from './dto';
+import { AuthDto, LoginDto } from './dto';
 import { Token } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
+import { compareData } from 'src/common/lib/hash';
 
 @Injectable()
 export class AuthService {
@@ -62,8 +63,19 @@ export class AuthService {
 		return tokens;
 	}
 
-	async signinLocal() {
-		return 'local signin';
+	async signinLocal(dto: LoginDto): Promise<Token> {
+
+		const user = await this.userService.findByUsername(dto.username);
+		if (!user) {
+			throw new Error('SIGNIN.USER_NOT_FOUND');
+		}
+		const is_valid = await compareData(dto.password, user.password);
+		if (!is_valid) {
+			throw new ForbiddenException('SIGNIN.INVALID_PASSWORD');
+		}
+		const tokens = await this.getTokens(user.id, user.username);
+		this.userService.updateRefreshToken(user.id, tokens.refresh_token);
+		return tokens
 	}
 
 	async logout() {
