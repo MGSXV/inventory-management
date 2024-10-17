@@ -22,6 +22,7 @@ model User {
   created_by           User?       @relation("UserCreatedBy", fields: [created_by_id], references: [id])
   created_users        User[]      @relation("UserCreatedBy")
   DepotCreatedBy       Depot[]     @relation("DepotCreatedBy")
+  CategoryCreatedBy    Category[]  @relation("CategoryCreatedBy")
   depots               Depot[]
   UserDepot            UserDepot[]
 
@@ -36,6 +37,8 @@ model Depot {
   image_url   String?
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
+
+  categories Category[]
 
   created_by_id String?
   created_by    User?       @relation("DepotCreatedBy", fields: [created_by_id], references: [id])
@@ -52,6 +55,24 @@ model UserDepot {
   depot    Depot  @relation(fields: [depot_id], references: [id])
 
   @@id([user_id, depot_id])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  state       EState
+  image_url   String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  created_by_id String?
+  created_by    User?   @relation("CategoryCreatedBy", fields: [created_by_id], references: [id])
+
+  depot_id String
+  depot    Depot  @relation(fields: [depot_id], references: [id])
+
+  @@map("categories")
 }
 
 enum EState {
