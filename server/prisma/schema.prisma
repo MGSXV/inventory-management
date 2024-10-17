@@ -72,6 +72,10 @@ model Category {
   depot_id String
   depot    Depot  @relation(fields: [depot_id], references: [id])
 
+  parentCategory   Category?  @relation("CategoryChildren", fields: [parentCategoryId], references: [id]) // Parent category relation
+  parentCategoryId String? // Foreign key to parent category
+  childCategories  Category[] @relation("CategoryChildren") // Child categories relation
+
   @@map("categories")
 }
 
