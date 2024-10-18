@@ -1,9 +1,10 @@
 import './App.css'
+import Authentication from './components/auth/Authentication'
 
 function App() {
 
 	return (
-		<h1>Hello World!</h1>
+		<Authentication />
 	)
 }
 
