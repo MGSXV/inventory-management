@@ -20,6 +20,12 @@ async function bootstrap() {
       },
     }),
   );
+  // CORS config
+  app.enableCors({
+	origin: env.CORS_ORIGIN || 'http://localhost:8000', 
+	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+	credentials: true
+  })
   await app.listen(3000);
 }
 bootstrap();
