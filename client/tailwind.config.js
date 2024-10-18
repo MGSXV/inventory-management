@@ -1,4 +1,4 @@
-const fontFamily = require('tailwindcss/defaultTheme').fontFamily;
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -61,7 +61,8 @@ module.exports = {
     			sm: 'calc(var(--radius) - 4px)'
     		},
     		fontFamily: {
-    			sans: ["var(--font-sans)", ...fontFamily.sans]
+    			// sans: ["var(--font-sans)", ...fontFamily.sans]
+				sans: ["Geist", ...defaultTheme.fontFamily.sans],
     		},
     		keyframes: {
     			'accordion-down': {
