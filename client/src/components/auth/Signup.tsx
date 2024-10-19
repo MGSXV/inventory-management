@@ -29,7 +29,6 @@ const Signup = ({ toast, setTab }: { toast: any, setTab: Function }) => {
 
 	const signup = (data: ISignup) => {
 		setIsLoading(true)
-		console.log(data)
 		axios.post(SIGNUP_ENDPOINT, {
 			username: data.username,
 			password: data.password,
@@ -38,11 +37,9 @@ const Signup = ({ toast, setTab }: { toast: any, setTab: Function }) => {
 		}, {
 			headers: { 'Content-Type': 'application/json' },
 			withCredentials: true
-		}).then(response => {
-			console.log(response)
+		}).then(_response => {
 			setTab()
 		}).catch(error => {
-			console.log(error)
 			if (!error) {
 				toast({
 					title: "Error",

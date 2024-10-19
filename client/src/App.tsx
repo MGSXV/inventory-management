@@ -5,15 +5,13 @@ import { Routes, Route } from 'react-router-dom'
 import { Dashboard } from './components/dashboard'
 import { NotFound, RequireAuth } from './components/common'
 import { useAuth } from './hooks'
-import { useEffect } from 'react'
 
 function App() {
 
-	const { user } = useAuth()
+	const { isLoading } = useAuth()
 
-	useEffect(() => {
-		console.log('user ---->', user)
-	}, [user])
+	if (isLoading)
+		return <div>Loading...</div>
 
 	return (
 		<Routes>

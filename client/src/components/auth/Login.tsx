@@ -27,13 +27,12 @@ const Login = ({ toast }: { toast: any }) => {
 	const [isLoading, setIsLoading] = useState(false)
 	const login_button = useRef<HTMLButtonElement>(null)
 	const { register, handleSubmit, formState: { errors } } = useForm<ILogin>()
-	const { setUser } = useAuth()
+	const { handleSetUser } = useAuth()
 	const navigate = useNavigate()
 	const location = useLocation()
 	const from = location.state?.from?.pathname || '/'
 
 	const login = (data: ILogin) => {
-		console.log(data)
 		setIsLoading(true)
 		axios.post(LOGIN_ENDPOINT, {
 			username: data.username,
@@ -42,11 +41,9 @@ const Login = ({ toast }: { toast: any }) => {
 			headers: { 'Content-Type': 'application/json' },
 			withCredentials: true
 		}).then(response => {
-			console.log(response)
-			setUser(response.data as ICurrentUser)
+			handleSetUser(response.data.message as ICurrentUser)
 			navigate(from, { replace: true })
 		}).catch(error => {
-			console.log(error)
 			if (!error) {
 				toast({
 					title: "Error",
