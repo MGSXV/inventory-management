@@ -98,7 +98,7 @@ export class AuthService {
 		return true;
 	}
 
-	async refreshTokens(user_id: string, rt: string): Promise<Token> {
+	async refreshTokens(user_id: string, rt: string) {
 		const user = await this.userService.findOneByID(user_id);
 		if (!user)
 			throw new ForbiddenException(`AUTH.${AUTH.ACCESS_DENIED}`);
@@ -107,7 +107,16 @@ export class AuthService {
 			throw new ForbiddenException(`AUTH.${AUTH.ACCESS_DENIED}`);
 		const tokens = await this.getTokens(user.id, user.username);
 		this.userService.updateRefreshToken(user.id, tokens.refresh_token);
-		return tokens
+		return {
+			...tokens,
+			user: {
+				id: user.id,
+				username: user.username,
+				first_name: user.first_name,
+				last_name: user.last_name,
+				avatar: user.avatar_url
+			}
+		}
 	}
 
 }
