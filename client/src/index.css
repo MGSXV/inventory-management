@@ -80,6 +80,13 @@ body {
 		--chart-5: 340 75% 55%;
 	}
 }
+@layer components {
+	input[aria-invalid="true"] {
+		@apply border-destructive;
+		@apply text-destructive;
+		@apply ring-destructive;
+	}
+}
 
 @layer base {
 	* {
