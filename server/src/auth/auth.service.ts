@@ -65,7 +65,7 @@ export class AuthService {
 		return tokens;
 	}
 
-	async signinLocal(dto: LoginDto): Promise<Token> {
+	async signinLocal(dto: LoginDto) {
 
 		const user = await this.userService.findByUsername(dto.username);
 		if (!user) {
@@ -77,7 +77,16 @@ export class AuthService {
 		}
 		const tokens = await this.getTokens(user.id, user.username);
 		this.userService.updateRefreshToken(user.id, tokens.refresh_token);
-		return tokens
+		return {
+			...tokens,
+			user: {
+				id: user.id,
+				username: user.username,
+				first_name: user.first_name,
+				last_name: user.last_name,
+				avatar: user.avatar_url
+			}
+		}
 	}
 
 	async logout(user_id: string) {
