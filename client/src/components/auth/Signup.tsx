@@ -36,10 +36,8 @@ const Signup = ({ toast, setTab }: { toast: any, setTab: Function }) => {
 			first_name: data.first_name,
 			last_name: data.last_name
 		}, {
-			headers: {
-				'Content-Type': 'application/json',
-				withCredentials: true
-			}
+			headers: { 'Content-Type': 'application/json' },
+			withCredentials: true
 		}).then(response => {
 			console.log(response)
 			setTab()

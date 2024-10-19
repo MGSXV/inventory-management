@@ -39,10 +39,8 @@ const Login = ({ toast }: { toast: any }) => {
 			username: data.username,
 			password: data.password,	
 		}, {
-			headers: {
-				'Content-Type': 'application/json',
-				withCredentials: true
-			}
+			headers: { 'Content-Type': 'application/json' },
+			withCredentials: true
 		}).then(response => {
 			console.log(response)
 			setUser(response.data as ICurrentUser)
