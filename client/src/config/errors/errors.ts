@@ -35,5 +35,5 @@ export function getErrorMessage(data: any) {
 	} else {
 		error_message = response.error
 	}
-	return ERRORS[error_message as keyof typeof ERRORS]
+	return ERRORS[error_message as keyof typeof ERRORS] ? ERRORS[error_message as keyof typeof ERRORS] : 'Unknown error'
 }
