@@ -3,12 +3,9 @@ import Authentication from './components/auth/Authentication'
 import Layout from './components/common/Layout'
 import { Routes, Route } from 'react-router-dom'
 import { Dashboard } from './components/dashboard'
-import { useAuth } from './hooks'
 import { NotFound, RequireAuth } from './components/common'
 
 function App() {
-
-	const { user } = useAuth()
 
 	return (
 		<Routes>
