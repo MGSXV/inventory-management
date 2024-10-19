@@ -1,1 +1,2 @@
-export * from './current_user'
+export * from './current_user';
+export * from './auth-context';
