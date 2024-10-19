@@ -1,14 +1,28 @@
 import './App.css'
 import Authentication from './components/auth/Authentication'
-import { Toaster } from './components/ui/toaster'
+import Layout from './components/common/Layout'
+import { Routes, Route } from 'react-router-dom'
+import { Dashboard } from './components/dashboard'
+import { useAuth } from './hooks'
+import { NotFound, RequireAuth } from './components/common'
 
 function App() {
 
+	const { user } = useAuth()
+
 	return (
-		<>
-			<Authentication />
-			<Toaster />
-		</>
+		<Routes>
+			<Route path='/' element={<Layout />} >
+				{ /** Public routes */ }
+				<Route path='/auth' element={<Authentication />} />
+
+				{ /** Private routes */ }
+				<Route element={<RequireAuth />} >
+					<Route path='/' element={<Dashboard />} />
+				</Route>
+				<Route path='/*' element={<NotFound />} />
+			</Route>
+		</Routes>
 	)
 }
 
