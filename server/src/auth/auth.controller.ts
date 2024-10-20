@@ -61,6 +61,11 @@ export class AuthController {
 				sameSite: 'strict',
 				maxAge: 0
 			})
+			response.cookie('refresh_token', '', {
+				httpOnly: true,
+				sameSite: 'strict',
+				maxAge: 0
+			})
 			const res = this.authService.logout(user_id)
 			response.end()
 			return res
