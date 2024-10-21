@@ -1,16 +1,17 @@
 import { Outlet } from "react-router-dom"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
-import { ModeToggle } from "../mode-toggle"
+import { Navbar } from "."
 
 const LayoutAuth = () => {
 	return (
 		<SidebarProvider>
 			<AppSidebar />
-			<main>
-				<SidebarTrigger />
-				<ModeToggle />
-				<Outlet />
+			<main className="flex flex-col w-auto flex-grow p-2 overflow-x-hidden overflow-y-auto">
+				<Navbar />
+				<div className="flex flex-col flex-grow my-4">
+					<Outlet />
+				</div>
 			</main>
 		</SidebarProvider>
 	)
