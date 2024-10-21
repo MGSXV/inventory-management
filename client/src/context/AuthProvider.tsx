@@ -1,13 +1,11 @@
 import React, { createContext, useEffect, useState } from "react";
 import { ICurrentUser, TAuthContext } from "@/types";
-import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext<TAuthContext>(null!);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const [user, setUser] = useState<ICurrentUser | null>(null);
 	const [isLoading, setIsLoading] = useState(true)
-	const navigator = useNavigate()
 
 	useEffect(() => {
 		const stored_user = localStorage.getItem('user')
@@ -23,7 +21,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 	const logout = () => {
 		setUser(null)
-		navigator('/auth')
 		localStorage.removeItem('user')
 	}
 

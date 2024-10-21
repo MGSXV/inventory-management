@@ -1,5 +1,6 @@
 import { useDepot } from "@/hooks";
 import { useEffect } from "react";
+import { DepotCards } from ".";
 
 const Dashboard = () => {
 
@@ -14,8 +15,11 @@ const Dashboard = () => {
 	}, [])
 
 	return (
-		<div>
-			<h1>Dashboard</h1>
+		<div className="w-full h-fit flex flex-col gap-3">
+			<h2 className="text-3xl font-bold tracking-tight">
+				Dashboard
+			</h2>
+			<DepotCards />
 		</div>
 	);
 }
