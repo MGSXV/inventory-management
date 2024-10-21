@@ -13,14 +13,16 @@ const Authentication = () => {
 	const tabChange = () => setTab(tab === "login" ? "signup" : "login")
 
 	return (
-		<Tabs defaultValue="login" value={tab} onValueChange={tabChange} id="form-container" className="w-[400px]">
-			<TabsList className="grid w-full grid-cols-2">
-				<TabsTrigger value="login">Login</TabsTrigger>
-				<TabsTrigger value="signup">Signup</TabsTrigger>
-			</TabsList>
-			<Login toast={toast} />
-			<Signup toast={toast} setTab={tabChange} />
-		</Tabs>
+		<div className="w-full h-full flex items-center justify-center">
+			<Tabs defaultValue="login" value={tab} onValueChange={tabChange} id="form-container" className="w-[400px]">
+				<TabsList className="grid w-full grid-cols-2">
+					<TabsTrigger value="login">Login</TabsTrigger>
+					<TabsTrigger value="signup">Signup</TabsTrigger>
+				</TabsList>
+				<Login toast={toast} />
+				<Signup toast={toast} setTab={tabChange} />
+			</Tabs>
+		</div>
 	)
 }
 

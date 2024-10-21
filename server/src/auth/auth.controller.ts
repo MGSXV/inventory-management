@@ -33,12 +33,14 @@ export class AuthController {
 			const user = await this.authService.signinLocal(dto);
 			response.cookie('access_token', user.access_token, {
 				httpOnly: true,
-				sameSite: 'strict'
+				sameSite: 'strict',
+				maxAge: 1000 * 60 * 15
 				// secure: true, // For HTTPS only
 			})
 			response.cookie('refresh_token', user.refresh_token, {
 				httpOnly: true,
-				sameSite: 'strict'
+				sameSite: 'strict',
+				maxAge: 1000 * 60 * 60 * 24
 				// secure: true, // For HTTPS only
 			})
 			return response.json({ message: {
@@ -99,12 +101,14 @@ export class AuthController {
 		const new_res = await this.authService.refreshTokens(user['sub'], refreshToken);
 		response.cookie('access_token', new_res.access_token, {
 			httpOnly: true,
-			sameSite: 'strict'
+			sameSite: 'strict',
+			maxAge: 1000 * 60 * 15
 			// secure: true, // For HTTPS only
 		})
 		response.cookie('refresh_token', new_res.refresh_token, {
 			httpOnly: true,
-			sameSite: 'strict'
+			sameSite: 'strict',
+			maxAge: 1000 * 60 * 60 * 24
 			// secure: true, // For HTTPS only
 		})
 		return response.json({ message: {
