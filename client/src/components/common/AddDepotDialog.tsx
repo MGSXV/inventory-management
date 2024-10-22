@@ -10,20 +10,30 @@ import { axios_private } from "@/config/api"
 interface IDepotInfo {
 	name: string
 	description?: string
-	picture?: string
+	picture?: File
 }
 
 export const AddDepotDialog = ({ isOpen, onOpenChange }:
 	{ isOpen: boolean, onOpenChange: (open: boolean) => void }) => {
 
-		const { register, handleSubmit, formState: { errors } } = useForm<IDepotInfo>()
-		const onSubmit = async (data: IDepotInfo) => {
-			axios_private.post("/depot", data).then(response => {
-				console.log(response)
-			}).catch(error => {
-				console.log(error)
-			})
-		}
+	const { register, handleSubmit, formState: { errors } } = useForm<IDepotInfo>()
+	const onSubmit = async (data: IDepotInfo) => {
+		console.log(data)
+		const formData = new FormData()
+		formData.append("name", data.name)
+		if (data.description) formData.append('description', data.description);
+		const fileInput = (data.picture as unknown as FileList)?.[0];
+		if (data.picture) formData.append('file', fileInput);
+		axios_private.post("/depot", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data"
+			}, withCredentials: true
+		}).then(response => {
+			console.log(response)
+		}).catch(error => {
+			console.log(error)
+		})
+	}
 	return (
 		<Dialog open={isOpen} onOpenChange={onOpenChange}>
 			<DialogContent className="sm:max-w-[425px]">
