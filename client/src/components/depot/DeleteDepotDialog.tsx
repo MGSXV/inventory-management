@@ -27,7 +27,6 @@ export const DeleteDepotDialog = ({ isOpen, onOpenChange, id }:
 				})
 			}
 		}).catch(error => {
-			console.log(error)
 			errorHandler(error)
 		}).finally(() => {
 			setIsLoading(false)
