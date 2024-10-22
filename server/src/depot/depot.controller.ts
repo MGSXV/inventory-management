@@ -1,16 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { DepotService } from './depot.service';
 import { CreateDepotDto, UpdateDepotDto } from './dto';
 import { GetCurrentUserID } from 'src/common/decorators';
+import { FileUploadService } from 'src/file-upload/file-upload.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { DEPOT } from 'src/common/errors';
+import { DEPOT_IMG_DIR } from 'src/common/conf';
 
+const MAX_FILE_SIZE = 1024 * 1024 * 10;
 
 @Controller('depot')
 export class DepotController {
-	constructor(private readonly depotService: DepotService) {}
+	constructor(
+		private readonly depotService: DepotService,
+		private readonly uploadFileServive: FileUploadService
+	) {}
 
 	@Post()
-	async create(@Body() createDepotDto: CreateDepotDto, @GetCurrentUserID() userID: string) {
+	@UseInterceptors(FileInterceptor('file', {
+		limits: { fileSize: MAX_FILE_SIZE },
+		fileFilter: (req, file, cb) => {
+			if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+				cb(null, true);
+			} else {
+				cb(new Error(`DEPOT.CREATE.IMAGE_URL.${DEPOT.CREATE.IMAGE_URL.INVALID_FILE_TYPE}`), false);
+			}
+		}
+	}))
+	async create(
+		@Body() createDepotDto: CreateDepotDto,
+		@GetCurrentUserID() userID: string,
+		@UploadedFile() file: Express.Multer.File
+	) {
 		try {
+			if (file)
+				createDepotDto.file = await this.uploadFileServive.uploadFile(file, DEPOT_IMG_DIR);
 			return await this.depotService.create(createDepotDto, userID);
 		} catch (error) {
 			throw new HttpException({

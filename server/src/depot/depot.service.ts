@@ -3,7 +3,6 @@ import { CreateDepotDto } from './dto/';
 import { UpdateDepotDto } from './dto/';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EState } from 'src/common';
-import { DEFAULT_DEPOT_IMG } from 'src/common/conf';
 import { DEPOT } from 'src/common/errors';
 
 @Injectable()
@@ -18,7 +17,7 @@ export class DepotService {
 				data: {
 					name: createDepotDto.name,
 					description: createDepotDto.description,
-					image_url: DEFAULT_DEPOT_IMG,
+					image_url: createDepotDto.file || null,
 					state: EState.ACTIVE,
 					created_by_id: user_id,
 					users: {
