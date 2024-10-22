@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
 import { DepotService } from './depot.service';
 import { CreateDepotDto, UpdateDepotDto } from './dto';
 import { GetCurrentUserID } from 'src/common/decorators';
@@ -23,7 +23,7 @@ export class DepotController {
 			if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
 				cb(null, true);
 			} else {
-				cb(new Error(`DEPOT.CREATE.IMAGE_URL.${DEPOT.CREATE.IMAGE_URL.INVALID_FILE_TYPE}`), false);
+				cb(new BadRequestException(`DEPOT.CREATE.IMAGE_URL.${DEPOT.CREATE.IMAGE_URL.INVALID_FILE_TYPE}`), false);
 			}
 		}
 	}))
