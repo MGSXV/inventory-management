@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { GetCurrentUserID } from 'src/common/decorators';
 
@@ -9,7 +9,7 @@ export class UserController {
 	) {}
 
 	@Get(':id')
-	async findOneByID(id: string) {
+	async findOneByID(@Param('id') id: string) {
 		return await this.userService.findOneByID(id);
 	}
 

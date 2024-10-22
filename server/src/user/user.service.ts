@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto';
 import { hashData } from 'src/common';
@@ -11,7 +11,7 @@ export class UserService {
 	constructor(private prisma: PrismaService) {}
 
 	async findOneByID(id: string) {
-		return this.prisma.user.findUnique({
+		return await this.prisma.user.findUnique({
 			where: { id }
 		});
 	}
@@ -65,9 +65,7 @@ export class UserService {
 		try {
 			const results = await this.prisma.user.findMany({
 				where: {
-					id: {
-						not: user_id
-					}
+					id: { not: user_id }
 				},
 				select: {
 					id: true,
