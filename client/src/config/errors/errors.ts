@@ -35,7 +35,7 @@ export const ERRORS = {
 	'DEPOT.FIND_ALL.NO_DEPOT_FOUND': 'No depot found',
 	'DEPOT.FIND_ONE.NO_DEPOT_FOUND': 'No depot found',
 	'DEPOT.REMOVE.NO_DEPOT_FOUND': 'No depot found',
-	'DEPOT.REMOVE.GENERAL': 'General error',
+	'DEPOT.REMOVE.GENERAL': 'Unknown error',
 	'DEPOT.UPDATE.NO_DEPOT_FOUND': 'No depot found',
 	'DEPOT.UPDATE.GENERAL': 'General error',
 	'DEPOT.UPDATE.USER_ALREADY_EXISTS': 'User already exists',
