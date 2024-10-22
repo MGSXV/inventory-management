@@ -3,6 +3,7 @@ import {
 	MoreHorizontal,
 	PlusIcon,
 	Trash2,
+	UserPlus,
 	ViewIcon
 } from "lucide-react"
 
@@ -24,18 +25,23 @@ import {
 } from "@/components/ui/sidebar"
 import { IDepot } from "@/types"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Fragment, useState } from "react"
-import { AddDepotDialog, DeleteDepotDialog } from "./depot"
+import { Fragment, useRef, useState } from "react"
+import { AddDepotDialog, DeleteDepotDialog, InviteUserToDepotDialog } from "./depot"
 
 export function NavProjects({ depots }: { depots: IDepot[] }) {
 	const { isMobile } = useSidebar()
 	const [isDeletDialogOpen, setIsDeleteDialogOpen] = useState(false)
 	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-	const [selectedDepotId, setSelectedDepotId] = useState<string>("");
+	const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false)
+	const selectedDepotId = useRef("")
 	const handleOpen = () => setIsAddDialogOpen(!isAddDialogOpen)
 	const handleDeleteDialogOpen = (id: string) => {
 		setIsDeleteDialogOpen(!isDeletDialogOpen)
-		setSelectedDepotId(id)
+		selectedDepotId.current = id
+	}
+	const handleInviteDialogOpen = (id: string) => {
+		setIsInviteDialogOpen(!isInviteDialogOpen)
+		selectedDepotId.current = id
 	}
 
 	return (
@@ -75,6 +81,11 @@ export function NavProjects({ depots }: { depots: IDepot[] }) {
 										<EditIcon className="text-muted-foreground" />
 										<span>Edit Depot</span>
 									</DropdownMenuItem>
+									<DropdownMenuItem className="cursor-pointer"
+										onClick={() => handleInviteDialogOpen(item.id)}>
+										<UserPlus className="text-muted-foreground" />
+										<span>Invite a user</span>
+									</DropdownMenuItem>
 									<DropdownMenuSeparator />
 									<DropdownMenuItem className="cursor-pointer"
 										onClick={() => handleDeleteDialogOpen(item.id)}>
@@ -95,8 +106,11 @@ export function NavProjects({ depots }: { depots: IDepot[] }) {
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarGroup>
-			<DeleteDepotDialog isOpen={isDeletDialogOpen} onOpenChange={setIsDeleteDialogOpen} id={selectedDepotId} />
 			<AddDepotDialog isOpen={isAddDialogOpen} onOpenChange={handleOpen} />
+			<DeleteDepotDialog isOpen={isDeletDialogOpen} onOpenChange={setIsDeleteDialogOpen}
+				id={selectedDepotId.current} />
+			<InviteUserToDepotDialog isOpen={isInviteDialogOpen} onOpenChange={setIsInviteDialogOpen}
+				id={selectedDepotId.current} />
 		</Fragment>
 	)
 }
