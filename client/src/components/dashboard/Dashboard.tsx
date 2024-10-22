@@ -1,13 +1,13 @@
-import { DepotCards } from ".";
+import { DepotCards } from "@/components/depot";
 
-const Dashboard = () => {
+const Dashboard = ({ onclick }: { onclick: any }) => {
 
 	return (
 		<div className="w-full h-fit flex flex-col gap-3">
 			<h2 className="text-3xl font-bold tracking-tight">
 				Dashboard
 			</h2>
-			<DepotCards />
+			<DepotCards onclick={onclick} />
 		</div>
 	);
 }
