@@ -1,8 +1,8 @@
-import { ICurrentUser } from ".";
+import { IUser } from ".";
 
 export type TAuthContext = {
-	user: ICurrentUser | null;
-	setUser: React.Dispatch<React.SetStateAction<ICurrentUser | null>>;
+	user: IUser | null;
+	setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
 	handleSetUser: Function
 	logout: Function
 	isLoading: boolean

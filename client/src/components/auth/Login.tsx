@@ -7,7 +7,7 @@ import { ReloadIcon } from "@radix-ui/react-icons"
 import { axios } from "@/config/api"
 import { getErrorMessage } from "@/config/errors"
 import { useAuth } from "@/hooks"
-import { ICurrentUser } from "@/types"
+import { IUser } from "@/types"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
@@ -41,7 +41,7 @@ const Login = ({ toast }: { toast: any }) => {
 			headers: { 'Content-Type': 'application/json' },
 			withCredentials: true
 		}).then(response => {
-			handleSetUser(response.data.message as ICurrentUser)
+			handleSetUser(response.data.message as IUser)
 			navigate(from, { replace: true })
 		}).catch(error => {
 			if (!error) {

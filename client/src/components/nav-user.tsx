@@ -14,13 +14,13 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar"
-import { ICurrentUser } from "@/types"
+import { IUser } from "@/types"
 import { useAuth } from "@/hooks"
 import { axios_private } from "@/config/api"
 
 const LOGOUT_ENDPOINT = '/logout'
 
-export function NavUser({ user }: {	user: ICurrentUser | null }) {
+export function NavUser({ user }: {	user: IUser | null }) {
 	const { isMobile } = useSidebar()
 	const { logout } = useAuth()
 

@@ -1,10 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
-import { ICurrentUser, TAuthContext } from "@/types";
+import { IUser, TAuthContext } from "@/types";
 
 const AuthContext = createContext<TAuthContext>(null!);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-	const [user, setUser] = useState<ICurrentUser | null>(null);
+	const [user, setUser] = useState<IUser | null>(null);
 	const [isLoading, setIsLoading] = useState(true)
 
 	useEffect(() => {
@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		setIsLoading(false)
 	}, [])
 
-	const handleSetUser = (userData: ICurrentUser) => {
+	const handleSetUser = (userData: IUser) => {
 		setUser(userData);
 		localStorage.setItem('user', JSON.stringify(userData));
 	};

@@ -22,12 +22,12 @@ import {
 	CommandSeparator,
 	CommandShortcut,
 } from "@/components/ui/command"
-import { ICurrentUser } from "@/types"
+import { IUser } from "@/types"
 	
 export function CommandDemo() {
 
 	const [isUsersLoading, setIsUsersLoading] = useState(false)
-	const [users, setUsers] = useState<ICurrentUser[]>([])
+	const [users, setUsers] = useState<IUser[]>([])
 	const axios = useAxiosPrivate()
 	const errorHandler = useErrorHandler()
 	const { user } = useAuth()
@@ -37,7 +37,7 @@ export function CommandDemo() {
 		axios.get('/users').then(response => {
 			if (response && response.status && response.status === 200) {
 				console.log(response)
-				setUsers(response.data.filter((u: ICurrentUser) => u.id !== user?.id))
+				setUsers(response.data.filter((u: IUser) => u.id !== user?.id))
 			}
 		}).catch(error => {
 			errorHandler(error)

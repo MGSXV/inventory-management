@@ -1,4 +1,4 @@
-export interface ICurrentUser {
+export interface IUser {
 	id: string
 	username: string
 	first_name: string
