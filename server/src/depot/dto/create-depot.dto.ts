@@ -11,6 +11,9 @@ export class CreateDepotDto {
 
 	@IsOptional()
 	@IsString({ message: `DEPOT.CREATE.DESCRIPTION.${DEPOT.CREATE.DESCRIPTION.MUST_BE_STRING}` })
+	@MaxLength(200, { message: `DEPOT.CREATE.DESCRIPTION.${DEPOT.CREATE.DESCRIPTION.MAX_LENGTH}` })
 	description?: string;
 
+	@IsOptional()
+	file?: string;
 }
