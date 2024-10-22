@@ -5,6 +5,7 @@ import { Routes, Route } from 'react-router-dom'
 import { Dashboard } from './components/dashboard'
 import { LayoutAuth, NotFound, RequireAuth } from './components/common'
 import { useAuth } from './hooks'
+import { useState } from 'react'
 
 function App() {
 
@@ -12,6 +13,10 @@ function App() {
 
 	if (isLoading)
 		return <div>Loading...</div>
+
+	const [isOpen, setIsOpen] = useState(false)
+
+	const handleOpen = () => setIsOpen(!isOpen)
 
 	return (
 		<Routes>
@@ -24,7 +29,7 @@ function App() {
 				{ /** Private routes */ }
 				<Route element={<RequireAuth />} >
 					<Route element={<LayoutAuth />}>
-						<Route path='/' element={<Dashboard />} />
+						<Route path='/' element={<Dashboard onclick={handleOpen} />} />
 					</Route>
 				</Route>
 				<Route path='/*' element={<NotFound />} />
