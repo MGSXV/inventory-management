@@ -180,17 +180,32 @@ export class DepotService {
 			throw new Error(`DEPOT.REMOVE.${DEPOT.REMOVE.NO_DEPOT_FOUND}`);
 		}
 		try {
-			const depot = await this.prisma.depot.delete({
-				where: {
-					id: id,
-					created_by_id: user_id
-				},
-				select: {
-					name: true,
-				}
-			})
-			return depot
+			// const depot = await this.prisma.userDepot.delete({
+			// 	where: {
+			// 		user_id_depot_id: {
+			// 			depot_id: id,
+			// 			user_id: user_id
+			// 		}
+			// 	}
+			// })
+			const [deletedRelation, deletedDepot] = await this.prisma.$transaction([
+				this.prisma.userDepot.delete({
+					where: {
+						user_id_depot_id: {
+							depot_id: id,
+							user_id: user_id
+						}					
+					}
+				}),
+				this.prisma.depot.delete({
+					where: {
+						id: id
+					}
+				})
+			])
+			return deletedDepot
 		} catch (error) {
+			console.log(error)
 			throw new Error(`DEPOT.REMOVE.${DEPOT.REMOVE.GENERAL}`);
 		}
 	}
