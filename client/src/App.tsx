@@ -10,13 +10,11 @@ import { useState } from 'react'
 function App() {
 
 	const { isLoading } = useAuth()
+	const [isOpen, setIsOpen] = useState(false)
+	const handleOpen = () => setIsOpen(!isOpen)
 
 	if (isLoading)
 		return <div>Loading...</div>
-
-	const [isOpen, setIsOpen] = useState(false)
-
-	const handleOpen = () => setIsOpen(!isOpen)
 
 	return (
 		<Routes>
