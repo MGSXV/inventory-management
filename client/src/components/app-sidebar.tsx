@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Command, Frame, Map, PieChart } from "lucide-react"
+import { Command } from "lucide-react"
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -12,30 +12,12 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/hooks"
-
-const data = {
-	projects: [
-		{
-			name: "Design Engineering",
-			url: "#",
-			icon: Frame,
-		},
-		{
-			name: "Sales & Marketing",
-			url: "#",
-			icon: PieChart,
-		},
-		{
-			name: "Travel",
-			url: "#",
-			icon: Map,
-		},
-	],
-}
+import { useDepot } from "@/context"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
 	const { user } = useAuth()
+	const { depots } = useDepot()
 
 	return (
 		<Sidebar variant="floating" collapsible="icon" {...props}>
@@ -48,16 +30,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 									<Command className="size-4" />
 								</div>
 								<div className="grid flex-1 text-left text-sm leading-tight">
-					<span className="truncate font-semibold">Inventory management</span>
-					<span className="truncate text-xs">selkhamlichi97@gmail.com</span>
-				</div>
+									<span className="truncate font-semibold">Inventory management</span>
+									<span className="truncate text-xs">selkhamlichi97@gmail.com</span>
+								</div>
 							</a>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent>
-				<NavProjects projects={data.projects} />
+				<NavProjects depots={depots} />
 			</SidebarContent>
 			<SidebarFooter>
 				<NavUser user={user} />

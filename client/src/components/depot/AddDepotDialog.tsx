@@ -5,10 +5,10 @@ import { Label } from "@radix-ui/react-label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useForm } from "react-hook-form"
-import { axios_private } from "@/config/api"
 import { useErrorHandler, useToast } from "@/hooks"
 import { useDepot } from "@/context"
 import { useEffect, useState } from "react"
+import useAxiosPrivate from "@/hooks/user-axios-private"
 
 interface IDepotInfo {
 	name: string
@@ -23,6 +23,7 @@ export const AddDepotDialog = ({ isOpen, onOpenChange }:
 	const { toast } = useToast()
 	const { depots, setDepots } = useDepot()
 	const [isLoading, setIsLoading] = useState(false)
+	const axios = useAxiosPrivate()
 
 	const { register, handleSubmit, formState: { errors }, reset } = useForm<IDepotInfo>()
 	const onSubmit = async (data: IDepotInfo) => {
@@ -32,7 +33,7 @@ export const AddDepotDialog = ({ isOpen, onOpenChange }:
 		if (data.description) formData.append('description', data.description);
 		const fileInput = (data.picture as unknown as FileList)?.[0];
 		if (data.picture) formData.append('file', fileInput);
-		axios_private.post("/depot", formData, {
+		axios.post("/depot", formData, {
 			headers: {
 				"Content-Type": "multipart/form-data"
 			}, withCredentials: true

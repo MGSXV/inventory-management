@@ -13,6 +13,7 @@ const AuthOutlet = ({ children }: { children: React.ReactNode }) => {
 	const { setDepots } = useDepot()
 	const axios = useAxiosPrivate()
 
+
 	useEffect(() => {
 		axios.get(API_ENDPOINT).then((res) => {
 			if (res && res.data && res.status && res.status === 200) {
