@@ -9,7 +9,7 @@ async function bootstrap() {
   app.enableCors({
     origin: env.CORS_ORIGIN,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   });
   app.use(cookieParser());
   app.useGlobalPipes(
