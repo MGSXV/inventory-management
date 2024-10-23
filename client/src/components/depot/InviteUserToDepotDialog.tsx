@@ -1,44 +1,30 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react"
 import useAxiosPrivate from "@/hooks/user-axios-private"
-import { useAuth, useErrorHandler, useToast } from "@/hooks"
-import {
-	CalendarIcon,
-	EnvelopeClosedIcon,
-	FaceIcon,
-	GearIcon,
-	PersonIcon,
-	RocketIcon,
-} from "@radix-ui/react-icons"
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-	CommandSeparator,
-	CommandShortcut,
-} from "@/components/ui/command"
+import { useErrorHandler, useToast } from "@/hooks"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { IUser } from "@/types"
-	
-export function CommandDemo() {
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
+import { cn } from "@/lib/utils"
 
+const API_ENDPOINT = '/user/all'
+
+export function UserSearch({ value, setValue }:
+	{ value: string, setValue: React.Dispatch<React.SetStateAction<string>> }) {
+	const [open, setOpen] = useState(false)
 	const [isUsersLoading, setIsUsersLoading] = useState(false)
 	const [users, setUsers] = useState<IUser[]>([])
 	const axios = useAxiosPrivate()
 	const errorHandler = useErrorHandler()
-	const { user } = useAuth()
 
 	const get_all_users = () => {
 		setIsUsersLoading(true)
-		axios.get('/users').then(response => {
-			if (response && response.status && response.status === 200) {
-				console.log(response)
-				setUsers(response.data.filter((u: IUser) => u.id !== user?.id))
-			}
+		axios.get(API_ENDPOINT).then(response => {
+			if (response && response.status && response.status === 200 && response.data && Array.isArray(response.data))
+				setUsers([...response.data])
 		}).catch(error => {
 			errorHandler(error)
 		}).finally(() => {
@@ -49,46 +35,47 @@ export function CommandDemo() {
 	useEffect(() => {
 		get_all_users()
 	}, [])
-
+ 
 	return (
-		<Command className="rounded-lg border shadow-md md:min-w-[300px]">
-			<CommandInput placeholder="Search for a user..." />
-			<CommandList>
-				<CommandEmpty>No results found.</CommandEmpty>
-				<CommandGroup heading="Suggestions">
-				<CommandItem>
-					<CalendarIcon />
-					<span>Calendar</span>
-				</CommandItem>
-				<CommandItem>
-					<FaceIcon />
-					<span>Search Emoji</span>
-				</CommandItem>
-				<CommandItem disabled>
-					<RocketIcon />
-					<span>Launch</span>
-				</CommandItem>
-				</CommandGroup>
-				<CommandSeparator />
-				<CommandGroup heading="Settings">
-				<CommandItem>
-					<PersonIcon />
-					<span>Profile</span>
-					<CommandShortcut>⌘P</CommandShortcut>
-				</CommandItem>
-				<CommandItem>
-					<EnvelopeClosedIcon />
-					<span>Mail</span>
-					<CommandShortcut>⌘B</CommandShortcut>
-				</CommandItem>
-				<CommandItem>
-					<GearIcon />
-					<span>Settings</span>
-					<CommandShortcut>⌘S</CommandShortcut>
-				</CommandItem>
-				</CommandGroup>
-			</CommandList>
-		</Command>
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverTrigger asChild>
+				<Button variant="outline" role="combobox" aria-expanded={open} disabled={isUsersLoading}
+					className="w-full justify-between">
+					{value && !isUsersLoading ? users.find((user) => user.id === value)?.username : "Select user..."}
+					<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-[375px] p-0">
+				<Command>
+					<CommandInput placeholder="Search user..." className="h-9" disabled={isUsersLoading} />
+					<CommandList>
+						<CommandEmpty>No user found.</CommandEmpty>
+						<CommandGroup>
+							{users.map((user) => (
+								<CommandItem className="cursor-pointer"
+									key={user.id}
+									value={user.username}
+									onSelect={(currentValue) => {
+										setValue(currentValue === value ? "" : user.id)
+										setOpen(false)
+									}}
+								>
+									<Avatar className="size-7 rounded-lg mr-2">
+										<AvatarImage src={user.avatar} alt={`${user.username}`} />
+										<AvatarFallback className="rounded-lg uppercase">
+											{user.first_name.charAt(0) + user.last_name.charAt(0)}
+										</AvatarFallback>
+									</Avatar>
+									<span>{user.username}</span>
+									<CheckIcon className={
+										cn("ml-auto h-4 w-4", value === user.id ? "opacity-100" : "opacity-0")}/>
+								</CommandItem>
+							))}
+						</CommandGroup>
+					</CommandList>
+				</Command>
+			</PopoverContent>
+		</Popover>
 	)
 }
 
@@ -96,13 +83,16 @@ export const InviteUserToDepotDialog = ({ isOpen, onOpenChange, id }:
 	{ isOpen: boolean, id: string, onOpenChange: (open: boolean) => void }) => {
 
 	const [isLoading, setIsLoading] = useState(false)
+	const [value, setValue] = useState("")
 	const axios = useAxiosPrivate()
 	const errorHandler = useErrorHandler()
 	const { toast } = useToast()
 
 	const handleInvite = () => {
 		setIsLoading(true)
-		axios.patch(`/depot/${id}/add-user/:user_id`).then(response => {
+		axios.patch(`depot/${id}/invite`, {
+			userId: value
+		}).then(response => {
 			if (response && response.status && response.status === 200) {
 				toast({
 					title: "Success",
@@ -128,7 +118,7 @@ export const InviteUserToDepotDialog = ({ isOpen, onOpenChange, id }:
 					<DialogDescription>
 						You are about to invite a user to this depot. Please enter their username.
 					</DialogDescription>
-					<CommandDemo />
+					<UserSearch value={value} setValue={setValue}/>
 				</div>
 				<DialogFooter>
 					<Button type="submit" variant="default" onClick={handleInvite} disabled={isLoading}>

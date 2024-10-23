@@ -40,6 +40,8 @@ export const ERRORS = {
 	'DEPOT.UPDATE.GENERAL': 'General error',
 	'DEPOT.UPDATE.USER_ALREADY_EXISTS': 'User already exists',
 	'DEPOT.UPDATE.INVALID_USER': 'Invalid user',
+	'DEPOT.UPDATE.MUST_BE_STRING': 'Must be a string',
+	'DEPOT.UPDATE.REQUIRED': 'Required',
 }
 
 export function getErrorMessage(data: any) {
