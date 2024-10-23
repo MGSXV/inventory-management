@@ -35,6 +35,8 @@ export class DepotController {
 		try {
 			if (file)
 				createDepotDto.file = await this.uploadFileServive.uploadFile(file, DEPOT_IMG_DIR);
+			else
+				createDepotDto.file = undefined;
 			return await this.depotService.create(createDepotDto, userID);
 		} catch (error) {
 			throw new HttpException({
