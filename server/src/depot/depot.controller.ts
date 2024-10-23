@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
 import { DepotService } from './depot.service';
-import { CreateDepotDto, UpdateDepotDto } from './dto';
+import { CreateDepotDto, InviteUserDto, UpdateDepotDto } from './dto';
 import { GetCurrentUserID } from 'src/common/decorators';
 import { FileUploadService } from 'src/file-upload/file-upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -36,6 +36,19 @@ export class DepotController {
 			if (file)
 				createDepotDto.file = await this.uploadFileServive.uploadFile(file, DEPOT_IMG_DIR);
 			return await this.depotService.create(createDepotDto, userID);
+		} catch (error) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: error.message,
+			}, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@Patch(':id/invite')
+	async addUser(@Param('id') id: string, @GetCurrentUserID() userID: string,@Body() invite: InviteUserDto) {
+		console.log(invite)
+		try {
+			return await this.depotService.addUser(id, invite.userId, userID);
 		} catch (error) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
@@ -85,18 +98,6 @@ export class DepotController {
 	async remove(@Param('id') id: string, @GetCurrentUserID() userID: string) {
 		try {
 			return await this.depotService.remove(id, userID);
-		} catch (error) {
-			throw new HttpException({
-				status: HttpStatus.BAD_REQUEST,
-				error: error.message,
-			}, HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@Patch(':id/add-user/:user_id')
-	async addUser(@Param('id') id: string, @Param('user_id') user_id: string, @GetCurrentUserID() userID: string) {
-		try {
-			return await this.depotService.addUser(id, user_id, userID);
 		} catch (error) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
