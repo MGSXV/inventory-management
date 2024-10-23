@@ -1,6 +1,7 @@
 import { Controller, Get, HttpException, HttpStatus, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { GetCurrentUserID } from 'src/common/decorators';
+import { use } from 'passport';
 
 @Controller('user')
 export class UserController {
@@ -8,9 +9,23 @@ export class UserController {
 		private readonly userService: UserService
 	) {}
 
-	@Get(':id')
-	async findOneByID(@Param('id') id: string) {
-		return await this.userService.findOneByID(id);
+	@Get()
+	async findCurrent(@GetCurrentUserID() user_id: string) {
+		try {
+			const results = await this.userService.findOneByID(user_id);
+			return results ? {
+				id: results.id,
+				username: results.username,
+				first_name: results.first_name,
+				last_name: results.last_name,
+				avatar_url: results.avatar_url
+			} : null
+		} catch (error) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: error.message,
+			}, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@Get('username/:username')
@@ -19,14 +34,19 @@ export class UserController {
 	}
 
 	@Get('all')
-	async findAll(@GetCurrentUserID() use_id: string) {
+	async findAll(@GetCurrentUserID() user_id: string) {
 		try {
-			return await this.userService.findAll(use_id);
+			return await this.userService.findAll(user_id);
 		} catch (error) {
 			throw new HttpException({
 				status: HttpStatus.BAD_REQUEST,
 				error: error.message,
 			}, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@Get(':id')
+	async findOneByID(@Param('id') id: string) {
+		return await this.userService.findOneByID(id);
 	}
 }
