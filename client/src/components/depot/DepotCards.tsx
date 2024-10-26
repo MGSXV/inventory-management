@@ -1,6 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useDepot } from "@/context"
+import { IDepot } from "@/types"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { MouseEventHandler } from "react"
+import defaultDepot from "@/assets/images/default-depot.png"
+import { Button } from "../ui/button"
 
 const AddCard = ({ onclick }: { onclick: MouseEventHandler<HTMLDivElement> }) => {
 
@@ -14,7 +18,38 @@ const AddCard = ({ onclick }: { onclick: MouseEventHandler<HTMLDivElement> }) =>
 	)
 }
 
+const DepotCard = ({ depot }: { depot: IDepot }) => {
+
+	return (
+		<Card className="cursor-pointer flex flex-col justify-center items-start pt-6">
+			{/* <CardHeader className="w-full"></CardHeader> */}
+			<CardContent className="flex w-full items-center justify-center flex-1">
+				<div className="relative flex flex-col w-full h-full max-w-xs overflow-hidden rounded-lg">
+					<div className="flex items-center justify-center w-full aspect-w-1 aspect-h-1 rounded-xl overflow-hidden mb-5">
+						<img className="object-cover w-full" src={depot.image_url || defaultDepot} alt="product image" />
+					</div>
+					<div className="flex flex-col flex-1 gap-y-4">
+						<div className="flex flex-col gap-y-2">
+							<a href="#">
+								<h5 className="text-lg lg:text-xl font-bold tracking-tight truncate">
+								{depot.name}
+								</h5>
+							</a>
+							<p className="text-base truncate">
+								{depot.description || ""}
+							</p>
+						</div>
+						<Button variant="outline">View Depot</Button>
+					</div>
+				</div>
+			</CardContent>
+		</Card>
+	)
+}
+
 export const DepotCards = ({ onclick }: { onclick: MouseEventHandler<HTMLDivElement> }) => {
+
+	const { depots } = useDepot()
 
 	return (
 		<Card>
@@ -23,13 +58,11 @@ export const DepotCards = ({ onclick }: { onclick: MouseEventHandler<HTMLDivElem
 			</CardHeader>
 			<CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 				<AddCard onclick={onclick} />
-				<div className="bg-green-200 h-40"></div>
-				<div className="bg-blue-200 h-40"></div>
-				<div className="bg-yellow-200 h-40"></div>
-				<div className="bg-violet-200 h-40"></div>
-				<div className="bg-orange-200 h-40"></div>
-				<div className="bg-amber-200 h-40"></div>
-				<div className="bg-pink-200 h-40"></div>
+				{
+					depots.map((depot) => (
+						<DepotCard key={depot.id} depot={depot} />
+					))
+				}
 			</CardContent>
 		</Card>
 	)
