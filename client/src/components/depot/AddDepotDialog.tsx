@@ -90,6 +90,9 @@ export const AddDepotDialog = ({ isOpen, onOpenChange }:
 					<Button type="submit" onClick={handleSubmit(onSubmit)} disabled={isLoading}>
 						Add new depot
 					</Button>
+					<Button variant="secondary" onClick={() => onOpenChange(false)} disabled={isLoading}>
+						Cancel
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
