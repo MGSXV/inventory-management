@@ -131,6 +131,7 @@ export class DepotService {
 				data: {
 					name: updateDepotDto.name,
 					description: updateDepotDto.description,
+					image_url: updateDepotDto.file || is_valid.image_url,
 				},
 				select: {
 					id: true,

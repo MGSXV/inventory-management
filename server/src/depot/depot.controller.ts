@@ -85,8 +85,27 @@ export class DepotController {
 	}
 
 	@Patch(':id')
-	async update(@Param('id') id: string, @GetCurrentUserID() userID: string, @Body() updateDepotDto: UpdateDepotDto) {
+	@UseInterceptors(FileInterceptor('file', {
+		limits: { fileSize: MAX_FILE_SIZE },
+		fileFilter: (req, file, cb) => {
+			if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+				cb(null, true);
+			} else {
+				cb(new BadRequestException(`DEPOT.CREATE.IMAGE_URL.${DEPOT.CREATE.IMAGE_URL.INVALID_FILE_TYPE}`), false);
+			}
+		}
+	}))
+	async update(
+		@Param('id') id: string,
+		@GetCurrentUserID() userID: string,
+		@Body() updateDepotDto: UpdateDepotDto,
+		@UploadedFile() file: Express.Multer.File
+	) {
 		try {
+			if (file)
+				updateDepotDto.file = await this.uploadFileServive.uploadFile(file, DEPOT_IMG_DIR);
+			else
+				updateDepotDto.file = undefined;
 			return await this.depotService.update(id, userID, updateDepotDto);
 		} catch (error) {
 			throw new HttpException({
