@@ -12,3 +12,9 @@ export type TDepotContext = {
 	depots: IDepot[],
 	setDepots: React.Dispatch<React.SetStateAction<IDepot[]>>,
 }
+
+export interface IDepotInfo {
+	name: string
+	description?: string
+	picture?: File
+}

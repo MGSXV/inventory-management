@@ -9,12 +9,7 @@ import { useErrorHandler, useToast } from "@/hooks"
 import { useDepot } from "@/context"
 import { useEffect, useState } from "react"
 import { useAxiosPrivate } from "@/hooks"
-
-interface IDepotInfo {
-	name: string
-	description?: string
-	picture?: File
-}
+import { IDepotInfo } from "@/types"
 
 export const AddDepotDialog = ({ isOpen, onOpenChange }:
 	{ isOpen: boolean, onOpenChange: (open: boolean) => void }) => {
