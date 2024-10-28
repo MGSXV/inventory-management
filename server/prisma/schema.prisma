@@ -23,6 +23,7 @@ model User {
   created_users        User[]      @relation("UserCreatedBy")
   DepotCreatedBy       Depot[]     @relation("DepotCreatedBy")
   CategoryCreatedBy    Category[]  @relation("CategoryCreatedBy")
+  SupplierCreatedBy    Supplier[]  @relation("SupplierCreatedBy")
   depots               Depot[]
   UserDepot            UserDepot[]
 
@@ -77,6 +78,21 @@ model Category {
   childCategories  Category[] @relation("CategoryChildren") // Child categories relation
 
   @@map("categories")
+}
+
+model Supplier {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  state       EState
+  image_url   String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  created_by_id String?
+  created_by    User?   @relation("SupplierCreatedBy", fields: [created_by_id], references: [id])
+
+  @@map("suppliers")
 }
 
 enum EState {
