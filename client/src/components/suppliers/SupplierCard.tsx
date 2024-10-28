@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button"
 import defaultSupplier from "@/assets/images/default-supplier.png"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { EditIcon, MoreHorizontal, Trash2, ViewIcon } from "lucide-react"
-import { useRef, useState } from "react"
+import { Fragment, useRef, useState } from "react"
+import { DeleteSupplierDialog } from "."
 
 export const SupplierOptions = ({ supplier }: { supplier: ISupplier }) => {
 
@@ -24,31 +25,34 @@ export const SupplierOptions = ({ supplier }: { supplier: ISupplier }) => {
 	}
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger>
-				<MoreHorizontal />
-				<span className="sr-only">More</span>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent className="w-48">
-				<DropdownMenuItem>
-					<ViewIcon className="text-muted-foreground" />
-					<a href={`/supplier/${supplier.id}`}>
-						<span>View Supplier</span>
-					</a>
-				</DropdownMenuItem>
-				<DropdownMenuItem className="cursor-pointer"
-					onClick={() => handleEditDialogOpen(supplier.id)}>
-					<EditIcon className="text-muted-foreground" />
-					<span>Edit Supplier</span>
-				</DropdownMenuItem>
-				<DropdownMenuSeparator />
-				<DropdownMenuItem className="cursor-pointer"
-					onClick={() => handleDeleteDialogOpen(supplier.id)}>
-					<Trash2 className="text-muted-foreground" />
-					<span>Delete Supplier</span>
-				</DropdownMenuItem>
-			</DropdownMenuContent>
-		</DropdownMenu>
+		<Fragment>
+			<DropdownMenu>
+				<DropdownMenuTrigger>
+					<MoreHorizontal />
+					<span className="sr-only">More</span>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent className="w-48">
+					<DropdownMenuItem>
+						<ViewIcon className="text-muted-foreground" />
+						<a href={`/supplier/${supplier.id}`}>
+							<span>View Supplier</span>
+						</a>
+					</DropdownMenuItem>
+					<DropdownMenuItem className="cursor-pointer"
+						onClick={() => handleEditDialogOpen(supplier.id)}>
+						<EditIcon className="text-muted-foreground" />
+						<span>Edit Supplier</span>
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem className="cursor-pointer"
+						onClick={() => handleDeleteDialogOpen(supplier.id)}>
+						<Trash2 className="text-muted-foreground" />
+						<span>Delete Supplier</span>
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+			<DeleteSupplierDialog isOpen={isDeletDialogOpen} onOpenChange={setIsDeleteDialogOpen} id={selectedSupplierId.current} />
+		</Fragment>
 	)
 }
 
