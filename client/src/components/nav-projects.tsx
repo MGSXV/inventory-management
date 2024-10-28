@@ -26,14 +26,16 @@ import {
 import { IDepot } from "@/types"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Fragment, useRef, useState } from "react"
-import { AddDepotDialog, DeleteDepotDialog, InviteUserToDepotDialog } from "./depot"
+import { AddDepotDialog, DeleteDepotDialog, InviteUserToDepotDialog, EditDepotDialog } from "./depot"
 
 export function NavProjects({ depots }: { depots: IDepot[] }) {
 	const { isMobile } = useSidebar()
 	const [isDeletDialogOpen, setIsDeleteDialogOpen] = useState(false)
 	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
 	const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false)
+	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 	const selectedDepotId = useRef("")
+	const selectedDepot = useRef<IDepot | null >(null)
 	const handleOpen = () => setIsAddDialogOpen(!isAddDialogOpen)
 	const handleDeleteDialogOpen = (id: string) => {
 		setIsDeleteDialogOpen(!isDeletDialogOpen)
@@ -42,6 +44,10 @@ export function NavProjects({ depots }: { depots: IDepot[] }) {
 	const handleInviteDialogOpen = (id: string) => {
 		setIsInviteDialogOpen(!isInviteDialogOpen)
 		selectedDepotId.current = id
+	}
+	const handleEditDialog = (depot: IDepot) => {
+		setIsEditDialogOpen(!isEditDialogOpen)
+		selectedDepot.current = depot
 	}
 
 	return (
@@ -77,7 +83,8 @@ export function NavProjects({ depots }: { depots: IDepot[] }) {
 											<span>View Depot</span>
 										</a>
 									</DropdownMenuItem>
-									<DropdownMenuItem className="cursor-pointer">
+									<DropdownMenuItem className="cursor-pointer"
+										onClick={() => handleEditDialog(item)}>
 										<EditIcon className="text-muted-foreground" />
 										<span>Edit Depot</span>
 									</DropdownMenuItem>
@@ -111,6 +118,8 @@ export function NavProjects({ depots }: { depots: IDepot[] }) {
 				id={selectedDepotId.current} />
 			<InviteUserToDepotDialog isOpen={isInviteDialogOpen} onOpenChange={setIsInviteDialogOpen}
 				id={selectedDepotId.current} />
+			{selectedDepot && selectedDepot.current ? <EditDepotDialog isOpen={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}
+				depot={selectedDepot.current} /> : null}
 		</Fragment>
 	)
 }
