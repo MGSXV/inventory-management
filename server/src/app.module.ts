@@ -9,9 +9,10 @@ import { CategoryModule } from './category/category.module';
 import { FileUploadService } from './file-upload/file-upload.service';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { CloudinaryConfigModule } from './cloudinary-config/cloudinary-config.module';
+import { SupplierModule } from './supplier/supplier.module';
 
 @Module({
-	imports: [PrismaModule, AuthModule, UserModule, DepotModule, CategoryModule, FileUploadModule, CloudinaryConfigModule],
+	imports: [PrismaModule, AuthModule, UserModule, DepotModule, CategoryModule, FileUploadModule, CloudinaryConfigModule, SupplierModule],
 	controllers: [],
 	providers: [
 		{ provide: APP_GUARD, useClass: AtGuard },
