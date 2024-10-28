@@ -2,7 +2,7 @@ import { axios_private } from "@/config/api"
 import { useAuth, useRefreshToken } from "."
 import { useEffect } from "react"
 
-const useAxiosPrivate = () => {
+export const useAxiosPrivate = () => {
 	const refresh = useRefreshToken()
 	const { user } = useAuth()
 
@@ -36,5 +36,3 @@ const useAxiosPrivate = () => {
 
 	return axios_private
 }
-
-export default useAxiosPrivate
