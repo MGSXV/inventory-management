@@ -1,6 +1,6 @@
 import { Dialog, DialogHeader, DialogContent, DialogDescription, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { useErrorHandler, useToast } from "@/hooks"
-import useAxiosPrivate from "@/hooks/user-axios-private"
+import { useAxiosPrivate } from "@/hooks"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { useDepot } from "@/context"

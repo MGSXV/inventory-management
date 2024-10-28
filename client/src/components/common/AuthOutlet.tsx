@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from "react";
 import { Navbar } from ".";
 import { useDepot } from "@/context";
-import useAxiosPrivate from "@/hooks/user-axios-private";
+import { useAxiosPrivate } from "@/hooks";
 import { AppSidebar } from "../app-sidebar";
 import { useErrorHandler } from "@/hooks";
 

@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
-import useAxiosPrivate from "@/hooks/user-axios-private"
+import { useAxiosPrivate } from "@/hooks"
 import { useErrorHandler, useToast } from "@/hooks"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { IUser } from "@/types"

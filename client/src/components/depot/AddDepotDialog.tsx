@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 import { useErrorHandler, useToast } from "@/hooks"
 import { useDepot } from "@/context"
 import { useEffect, useState } from "react"
-import useAxiosPrivate from "@/hooks/user-axios-private"
+import { useAxiosPrivate } from "@/hooks"
 
 interface IDepotInfo {
 	name: string

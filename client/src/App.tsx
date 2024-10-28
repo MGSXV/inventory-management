@@ -6,6 +6,7 @@ import { Dashboard } from './components/dashboard'
 import { LayoutAuth, NotFound, RequireAuth } from './components/common'
 import { useAuth } from './hooks'
 import { DepotDetails } from './components/depot'
+import { SuppliersDetails } from './components/suppliers'
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
 					<Route element={<LayoutAuth />}>
 						<Route path='/' element={<Dashboard />} />
 						<Route path='depot/:id' element={<DepotDetails />} />
+						<Route path='/suppliers' element={<SuppliersDetails />} />
 					</Route>
 				</Route>
 				<Route path='/*' element={<NotFound />} />
