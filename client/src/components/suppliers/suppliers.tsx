@@ -1,8 +1,9 @@
-import { Fragment, MouseEventHandler, useState } from "react"
+import { Fragment, MouseEventHandler, useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AddCard, SupplierCard } from "."
 import { AddSupplier } from "."
 import { SupplierProvider, useSupplier } from "@/context"
+import { useAxiosPrivate, useErrorHandler } from "@/hooks"
 
 const AllSuppliers = ({ onclick }: { onclick: MouseEventHandler<HTMLDivElement> }) => {
 
@@ -29,6 +30,24 @@ export const SuppliersDetails = () => {
 
 	const [isOpen, setIsOpen] = useState(false)
 	const handleOpen = () => setIsOpen(!isOpen)
+
+	const errorHandler = useErrorHandler()
+	const { setSuppliers } = useSupplier()
+	const axios = useAxiosPrivate()
+
+	const get_all_suppliers = async () => {
+		axios.get("/supplier", { withCredentials: true }).then(response => {
+			if (response && response.data && response.status === 200) {
+				setSuppliers([...response.data])
+			}
+		}).catch(error => {
+			errorHandler(error)
+		})
+	}
+
+	useEffect(() => {
+		get_all_suppliers()
+	}, [])
 
 	return (
 		<Fragment>
