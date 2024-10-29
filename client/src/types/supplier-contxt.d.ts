@@ -12,3 +12,9 @@ export type TSupplierContext = {
 	suppliers: ISupplier[],
 	setSuppliers: React.Dispatch<React.SetStateAction<ISupplier[]>>,
 }
+
+export interface ISupplierInfo {
+	name: string
+	description?: string
+	picture?: File
+}
