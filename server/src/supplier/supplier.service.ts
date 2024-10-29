@@ -53,7 +53,40 @@ export class SupplierService {
 		return `This action returns a #${id} supplier`;
 	}
 
-	update(id: number, updateSupplierDto: UpdateSupplierDto) {
+	async update(id: string, user_id: string, updateSupplierDto: UpdateSupplierDto) {
+		const is_valid = await this.prisma.supplier.findFirst({
+			where: {
+				id: id,
+				created_by_id: user_id
+			}
+		});
+		if (!is_valid) {
+			throw new Error(`SUPPLIER.UPDATE.${SUPPLIER.UPDATE.NO_SUPPLIER_FOUND}`);
+		}
+		try {
+			const depo = await this.prisma.supplier.update({
+				where: {
+					id: id,
+					created_by_id: user_id
+				},
+				data: {
+					name: updateSupplierDto.name,
+					description: updateSupplierDto.description,
+					image_url: updateSupplierDto.file || is_valid.image_url,
+				},
+				select: {
+					id: true,
+					name: true,
+					description: true,
+					image_url: true,
+					updated_at: true,
+					created_at: true
+				}
+			});
+			return depo;
+		} catch (error) {
+			throw new Error(`SUPPLIER.UPDATE.${SUPPLIER.UPDATE.GENERAL}`);
+		}
 		return `This action updates a #${id} supplier`;
 	}
 
@@ -65,7 +98,7 @@ export class SupplierService {
 			}
 		});
 		if (!is_valid) {
-			throw new Error(`DEPOT.REMOVE.${SUPPLIER.REMOVE.NO_SUPPLIER_FOUND}`);
+			throw new Error(`SUPPLIER.REMOVE.${SUPPLIER.REMOVE.NO_SUPPLIER_FOUND}`);
 		}
 		const results = await this.prisma.supplier.delete({
 			where: {

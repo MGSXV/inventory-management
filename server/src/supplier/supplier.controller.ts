@@ -24,7 +24,7 @@ export class SupplierController {
 			if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
 				cb(null, true);
 			} else {
-				cb(new BadRequestException(`DEPOT.CREATE.IMAGE_URL.${SUPPLIER.CREATE.IMAGE_URL.INVALID_FILE_TYPE}`), false);
+				cb(new BadRequestException(`SUPPLIER.CREATE.IMAGE_URL.${SUPPLIER.CREATE.IMAGE_URL.INVALID_FILE_TYPE}`), false);
 			}
 		}
 	}))
@@ -65,8 +65,27 @@ export class SupplierController {
 	}
 
 	@Patch(':id')
-	update(@Param('id') id: string, @Body() updateSupplierDto: UpdateSupplierDto) {
-		return this.supplierService.update(+id, updateSupplierDto);
+	@UseInterceptors(FileInterceptor('file', {
+		limits: { fileSize: MAX_FILE_SIZE },
+		fileFilter: (req, file, cb) => {
+			if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+				cb(null, true);
+			} else {
+				cb(new BadRequestException(`SUPPLIER.CREATE.IMAGE_URL.${SUPPLIER.CREATE.IMAGE_URL.INVALID_FILE_TYPE}`), false);
+			}
+		}
+	}))
+	async update(
+		@Param('id') id: string,
+		@Body() updateSupplierDto: UpdateSupplierDto,
+		@GetCurrentUserID() userID: string,
+		@UploadedFile() file: Express.Multer.File
+	) {
+		if (file)
+			updateSupplierDto.file = await this.uploadFileServive.uploadFile(file, SUPPLIER_IMG_DIR);
+		else
+			updateSupplierDto.file = undefined;
+		return await this.supplierService.update(id, userID, updateSupplierDto);
 	}
 
 	@Delete(':id')
