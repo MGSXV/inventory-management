@@ -28,7 +28,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Fragment, useRef, useState } from "react"
 import { AddDepotDialog, DeleteDepotDialog, InviteUserToDepotDialog, EditDepotDialog } from "./depot"
 
-export function NavProjects({ depots }: { depots: IDepot[] }) {
+export function NavDepots({ depots }: { depots: IDepot[] }) {
 	const { isMobile } = useSidebar()
 	const [isDeletDialogOpen, setIsDeleteDialogOpen] = useState(false)
 	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
