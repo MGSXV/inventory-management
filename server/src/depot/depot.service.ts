@@ -181,14 +181,6 @@ export class DepotService {
 			throw new Error(`DEPOT.REMOVE.${DEPOT.REMOVE.NO_DEPOT_FOUND}`);
 		}
 		try {
-			// const depot = await this.prisma.userDepot.delete({
-			// 	where: {
-			// 		user_id_depot_id: {
-			// 			depot_id: id,
-			// 			user_id: user_id
-			// 		}
-			// 	}
-			// })
 			const [deletedRelation, deletedDepot] = await this.prisma.$transaction([
 				this.prisma.userDepot.delete({
 					where: {
