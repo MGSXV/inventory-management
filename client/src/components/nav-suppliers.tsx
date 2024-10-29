@@ -37,6 +37,16 @@ export const NavSuppliers = ({ suppliers }: { suppliers: ISupplier[]}) => {
 			<SidebarGroup>
 				<SidebarGroupLabel>Suppliers</SidebarGroupLabel>
 				<SidebarMenu>
+					<SidebarMenuItem>
+						<SidebarMenuButton asChild>
+							<a href="/suppliers">
+								<Avatar className="h-6 w-6 rounded-lg">
+									<AvatarFallback className="rounded-lg uppercase">AS</AvatarFallback>
+								</Avatar>
+								<span>All suppliers</span>
+							</a>
+						</SidebarMenuButton>
+					</SidebarMenuItem>
 					{suppliers.map((item) => (
 						<SidebarMenuItem key={item.id}>
 							<SidebarMenuButton asChild>
