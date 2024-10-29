@@ -5,58 +5,12 @@ import { Button } from "@/components/ui/button"
 import defaultSupplier from "@/assets/images/default-supplier.png"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { EditIcon, MoreHorizontal, Trash2, ViewIcon } from "lucide-react"
-import { Fragment, useRef, useState } from "react"
-import { DeleteSupplierDialog } from "."
 
-export const SupplierOptions = ({ supplier }: { supplier: ISupplier }) => {
-
-	const [isDeletDialogOpen, setIsDeleteDialogOpen] = useState(false)
-	const [isEditDialogOpen, setIsEditeDialogOpen] = useState(false)
-	const selectedSupplierId = useRef("")
-
-	const handleEditDialogOpen = (id: string) => {
-		setIsEditeDialogOpen(!isEditDialogOpen)
-		selectedSupplierId.current = id
-	}
-
-	const handleDeleteDialogOpen = (id: string) => {
-		setIsDeleteDialogOpen(!isDeletDialogOpen)
-		selectedSupplierId.current = id
-	}
-
-	return (
-		<Fragment>
-			<DropdownMenu>
-				<DropdownMenuTrigger>
-					<MoreHorizontal />
-					<span className="sr-only">More</span>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent className="w-48">
-					<DropdownMenuItem>
-						<ViewIcon className="text-muted-foreground" />
-						<a href={`/supplier/${supplier.id}`}>
-							<span>View Supplier</span>
-						</a>
-					</DropdownMenuItem>
-					<DropdownMenuItem className="cursor-pointer"
-						onClick={() => handleEditDialogOpen(supplier.id)}>
-						<EditIcon className="text-muted-foreground" />
-						<span>Edit Supplier</span>
-					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem className="cursor-pointer"
-						onClick={() => handleDeleteDialogOpen(supplier.id)}>
-						<Trash2 className="text-muted-foreground" />
-						<span>Delete Supplier</span>
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
-			<DeleteSupplierDialog isOpen={isDeletDialogOpen} onOpenChange={setIsDeleteDialogOpen} id={selectedSupplierId.current} />
-		</Fragment>
-	)
-}
-
-export const SupplierCard = ({ supplier }: { supplier: ISupplier }) => {
+export const SupplierCard = ({ supplier, handleEditDialog, handleDeleteDialogOpen }: {
+		supplier: ISupplier,
+		handleEditDialog: (supplier: ISupplier) => void,
+		handleDeleteDialogOpen: (id: string) => void
+	}) => {
 
 	const navigator = useNavigate()
 
@@ -81,7 +35,31 @@ export const SupplierCard = ({ supplier }: { supplier: ISupplier }) => {
 						<div className="flex flex-row w-full justify-between gap-x-3">
 							<Button onClick={() => navigator(`/supplier/${supplier.id}`)} variant="outline" 
 								className="flex flex-grow">View Supplier</Button>
-							<SupplierOptions supplier={supplier} />
+							<DropdownMenu>
+								<DropdownMenuTrigger>
+									<MoreHorizontal />
+									<span className="sr-only">More</span>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent className="w-48">
+									<DropdownMenuItem>
+										<ViewIcon className="text-muted-foreground" />
+										<a href={`/supplier/${supplier.id}`}>
+											<span>View Supplier</span>
+										</a>
+									</DropdownMenuItem>
+									<DropdownMenuItem className="cursor-pointer"
+										onClick={() => handleEditDialog(supplier)}>
+										<EditIcon className="text-muted-foreground" />
+										<span>Edit Supplier</span>
+									</DropdownMenuItem>
+									<DropdownMenuSeparator />
+									<DropdownMenuItem className="cursor-pointer"
+										onClick={() => handleDeleteDialogOpen(supplier.id)}>
+										<Trash2 className="text-muted-foreground" />
+										<span>Delete Supplier</span>
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
 						</div>
 					</div>
 				</div>
