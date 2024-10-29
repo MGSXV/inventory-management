@@ -18,22 +18,6 @@ import { Menu } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-interface RouteProps {
-	href: string;
-	label: string;
-}
-
-const routeList: RouteProps[] = [
-	{
-		href: "/suppliers",
-		label: "Suppliers",
-	},
-	{
-		href: "/categories",
-		label: "Categories",
-	},
-];
-
 export const Navbar = () => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -49,7 +33,7 @@ export const Navbar = () => {
 				<span className="font-bold flex ml-4">
 					<SidebarTrigger />
 				</span>
-				<NavigationMenuList className="container h-14 px-4 w-full flex justify-between">
+				<NavigationMenuList className="container h-14 px-4 w-full flex flex-row-reverse justify-between">
 					{/* mobile */}
 					<span className="flex md:hidden">
 						<ModeToggle />
@@ -62,17 +46,17 @@ export const Navbar = () => {
 							<SheetContent side={"left"}>
 								<SheetHeader>
 									<SheetTitle className="font-bold text-xl">
-										Shadcn/React
+										Inventory Management
 									</SheetTitle>
 								</SheetHeader>
 								<nav className="flex flex-col justify-center items-center gap-2 mt-4">
-									{routeList.map(({ href, label }: RouteProps) => (
+									{/* {routeList.map(({ href, label }: RouteProps) => (
 										<a rel="noreferrer noopener" key={label} href={href} 
 											onClick={() => setIsOpen(false)}
 											className={buttonVariants({ variant: "ghost" })}>
 											{label}
 										</a>
-									))}
+									))} */}
 									<a rel="noreferrer noopener" href="https://github.com/MGSXV" target="_blank"
 										className={`w-[110px] border ${buttonVariants({
 											variant: "secondary",
@@ -86,7 +70,7 @@ export const Navbar = () => {
 					</span>
 
 					{/* desktop */}
-					<nav className="hidden md:flex gap-2">
+					{/* <nav className="hidden md:flex gap-2">
 						{routeList.map((route: RouteProps, i) => (
 							<a
 								rel="noreferrer noopener"
@@ -99,7 +83,7 @@ export const Navbar = () => {
 								{route.label}
 							</a>
 						))}
-					</nav>
+					</nav> */}
 
 					<div className="hidden md:flex gap-2">
 						<a rel="noreferrer noopener" href="https://github.com/MGSXV" target="_blank"
