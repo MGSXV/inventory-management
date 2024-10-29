@@ -2,7 +2,7 @@ import { Fragment, MouseEventHandler, useEffect, useRef, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AddCard, DeleteSupplierDialog, EditSupplier, SupplierCard } from "."
 import { AddSupplier } from "."
-import { SupplierProvider, useSupplier } from "@/context"
+import { useSupplier } from "@/context"
 import { useAxiosPrivate, useErrorHandler } from "@/hooks"
 import { ISupplier } from "@/types"
 
@@ -82,14 +82,5 @@ export const SuppliersDetails = () => {
 			</div>
 			<AddSupplier isOpen={isOpen} onOpenChange={handleOpen} />
 		</Fragment>
-	)
-}
-
-export const Suppliers = () => {
-
-	return (
-		<SupplierProvider>
-			<SuppliersDetails />
-		</SupplierProvider>
 	)
 }
