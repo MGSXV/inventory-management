@@ -3,16 +3,18 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { ICategoryInfo } from "@/types"
 import { useAxiosPrivate, useErrorHandler, useToast } from "@/hooks"
 import { useCategory } from "@/context"
+import { DepotSearch } from "@/components/common"
 
 export const AddCategory = ({ isOpen, onOpenChange, parent_category }:
 	{ isOpen: boolean, parent_category: string, onOpenChange: (open: boolean) => void }) => {
 
 	const [isLoading, setIsLoading] = useState(false)
+	const selectedDepot = useRef<string>("")
 	const { register, handleSubmit, formState: { errors }, reset } = useForm<ICategoryInfo>()
 	const axios = useAxiosPrivate()
 	const errorHandler = useErrorHandler()
@@ -63,6 +65,14 @@ export const AddCategory = ({ isOpen, onOpenChange, parent_category }:
 					</DialogDescription>
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
+					<div className="grid grid-cols-4 items-center gap-4">
+						<Label htmlFor="name" className="text-right">
+							Depot <span className="text-destructive">*</span>
+						</Label>
+						<div className="col-span-3">
+							<DepotSearch selected_depot={selectedDepot} />
+						</div>
+					</div>
 					<div className="grid grid-cols-4 items-center gap-4">
 						<Label htmlFor="name" className="text-right">
 							Name <span className="text-destructive">*</span>
