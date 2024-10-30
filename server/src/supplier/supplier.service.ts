@@ -32,7 +32,13 @@ export class SupplierService {
 		try {
 			const suppliers = await this.prisma.supplier.findMany({
 				where: {
-					created_by_id: user_id
+					depot: {
+						users: {
+							some: {
+								id: user_id
+							}
+						}
+					}
 				},
 				select: {
 					id: true,
