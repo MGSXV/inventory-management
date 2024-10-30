@@ -2,7 +2,7 @@ import { IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "c
 import { SUPPLIER } from "src/common/errors";
 
 export class CreateSupplierDto {
-	@IsString({ message: `DEPOT.CREATE.NAME.${SUPPLIER.CREATE.NAME.MUST_BE_STRING}` })
+	@IsString({ message: `SUPPLIER.CREATE.NAME.${SUPPLIER.CREATE.NAME.MUST_BE_STRING}` })
 	@IsNotEmpty({ message: `SUPPLIER.CREATE.NAME.${SUPPLIER.CREATE.NAME.REQUIRED}` })
 	@MinLength(4, { message: `SUPPLIER.CREATE.NAME.${SUPPLIER.CREATE.NAME.MIN_LENGTH}` })
 	@MaxLength(20, { message: `SUPPLIER.CREATE.NAME.${SUPPLIER.CREATE.NAME.MAX_LENGTH}` })
