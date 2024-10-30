@@ -10,7 +10,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { EditIcon, MoreHorizontal, PlusIcon, Trash2, ViewIcon } from "lucide-react"
-import { DeleteSupplierDialog, EditSupplier } from "./suppliers"
+import { AddSupplier, DeleteSupplierDialog, EditSupplier } from "./suppliers"
 
 export const NavSuppliers = ({ suppliers }: { suppliers: ISupplier[]}) => {
 
@@ -100,6 +100,7 @@ export const NavSuppliers = ({ suppliers }: { suppliers: ISupplier[]}) => {
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarGroup>
+			<AddSupplier isOpen={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />
 			{selectedSupplier.current && <EditSupplier isOpen={isEditDialogOpen}
 				onOpenChange={setIsEditDialogOpen} supplier={selectedSupplier.current} />}
 			{selectedSupplierId.current !== "" && <DeleteSupplierDialog isOpen={isDeletDialogOpen}

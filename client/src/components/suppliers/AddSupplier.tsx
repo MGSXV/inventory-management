@@ -5,9 +5,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { useErrorHandler, useToast } from "@/hooks"
 import { useAxiosPrivate } from "@/hooks"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useSupplier } from "@/context"
+import { DepotSearch } from "@/components/common"
 
 interface ISupplier {
 	name: string
@@ -22,6 +23,7 @@ export const AddSupplier = ({ isOpen, onOpenChange }:
 	const axios = useAxiosPrivate()
 	const { suppliers, setSuppliers } = useSupplier()
 	const [isLoading, setIsLoading] = useState(false)
+	const selectedDepot = useRef<string>("")
 	const { register, handleSubmit, formState: { errors }, reset } = useForm<ISupplier>()
 	const { toast } = useToast()
 
@@ -33,6 +35,7 @@ export const AddSupplier = ({ isOpen, onOpenChange }:
 		if (data.description) formData.append('description', data.description);
 		const fileInput = (data.picture as unknown as FileList)?.[0];
 		if (data.picture) formData.append('file', fileInput);
+		if (selectedDepot.current !== "") formData.append('depot_id', selectedDepot.current);
 
 		axios.post("/supplier", formData, {
 			headers: {
@@ -71,31 +74,42 @@ export const AddSupplier = ({ isOpen, onOpenChange }:
 					</DialogDescription>
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
-				<div className="grid grid-cols-4 items-center gap-4">
-					<Label htmlFor="name" className="text-right">
-					Name <span className="text-destructive">*</span>
-					</Label>
-					<Input id="name" placeholder="New supplier" className="col-span-3" disabled={isLoading}
-						{...register("name", { required: true, minLength: 4, maxLength: 20})}
-						aria-invalid={errors.name ? true : false } />
-				</div>
-				<div className="grid grid-cols-4 items-start gap-4">
-					<Label htmlFor="description" className="text-right">
-					description
-					</Label>
-					<Textarea id="description" placeholder="description" className="col-span-3"
-						{...register("description", { required: false, minLength: 4, maxLength: 200})}
-						aria-invalid={errors.description ? true : false } disabled={isLoading} />
-				</div>
-				<div className="grid grid-cols-4 items-start gap-4">
-					<Label htmlFor="picture">Picture</Label>
-					<Input id="picture" type="file" className="col-span-3" disabled={isLoading}
-						{...register("picture")} aria-invalid={errors.picture ? true : false } />
-				</div>
+					<div className="grid grid-cols-4 items-center gap-4">
+						<Label htmlFor="name" className="text-right">
+							Depot <span className="text-destructive">*</span>
+						</Label>
+						<div className="col-span-3">
+							<DepotSearch selected_depot={selectedDepot} />
+						</div>
+					</div>
+					<div className="grid grid-cols-4 items-center gap-4">
+						<Label htmlFor="name" className="text-right">
+						Name <span className="text-destructive">*</span>
+						</Label>
+						<Input id="name" placeholder="New supplier" className="col-span-3" disabled={isLoading}
+							{...register("name", { required: true, minLength: 4, maxLength: 20})}
+							aria-invalid={errors.name ? true : false } />
+					</div>
+					<div className="grid grid-cols-4 items-start gap-4">
+						<Label htmlFor="description" className="text-right">
+						description
+						</Label>
+						<Textarea id="description" placeholder="description" className="col-span-3"
+							{...register("description", { required: false, minLength: 4, maxLength: 200})}
+							aria-invalid={errors.description ? true : false } disabled={isLoading} />
+					</div>
+					<div className="grid grid-cols-4 items-start gap-4">
+						<Label htmlFor="picture">Picture</Label>
+						<Input id="picture" type="file" className="col-span-3" disabled={isLoading}
+							{...register("picture")} aria-invalid={errors.picture ? true : false } />
+					</div>
 				</div>
 				<DialogFooter>
 					<Button type="submit" onClick={handleSubmit(onSubmit)} disabled={isLoading}>
 						Add new supplier
+					</Button>
+					<Button variant="secondary" onClick={() => onOpenChange(false)} disabled={isLoading}>
+						Cancel
 					</Button>
 				</DialogFooter>
 			</DialogContent>
