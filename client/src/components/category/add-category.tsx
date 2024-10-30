@@ -29,6 +29,7 @@ export const AddCategory = ({ isOpen, onOpenChange, parent_category }:
 		const fileInput = (data.picture as unknown as FileList)?.[0];
 		if (data.picture) formData.append('file', fileInput);
 		if (parent_category !== "") formData.append('parent', parent_category);
+		if (selectedDepot.current !== "") formData.append('depot_id', selectedDepot.current);
 		axios.post("/category", formData, {
 			headers: {
 				"Content-Type": "multipart/form-data"
