@@ -26,5 +26,8 @@ export
 			INVALID_FILE_TYPE: 'INVALID_FILE_TYPE',
 		},
 		PARENT_CATEGORY: 'PARENT_CATEGORY',
-	}
+	},
+	FIND: {
+		GENERAL: 'GENERAL',
+	},
 };
