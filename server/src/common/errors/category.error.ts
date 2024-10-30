@@ -30,4 +30,7 @@ export
 	FIND: {
 		GENERAL: 'GENERAL',
 	},
+	DELETE: {
+		GENERAL: 'GENERAL',
+	},
 };

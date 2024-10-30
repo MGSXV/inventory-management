@@ -168,7 +168,18 @@ export class CategoryService {
 		return `This action updates a #${id} category`;
 	}
 
-	remove(id: number) {
-		return `This action removes a #${id} category`;
+	async remove(id: string, user_id: string) {
+		try {
+			const res = await this.prisma.category.delete({
+				where: {
+					id: id,
+					created_by_id: user_id
+				},
+				select: { id: true }
+			})
+			return res;
+		} catch (error) {
+			throw new Error(`CATEGORY.CREATE.${CATEGORY.DELETE.GENERAL}`);
+		}
 	}
 }
