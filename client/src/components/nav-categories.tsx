@@ -108,7 +108,10 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 												</Fragment>
 											)}
 											<SidebarMenuSubItem>
-												<SidebarMenuSubButton asChild onClick={handleOpen} className="cursor-pointer">
+												<SidebarMenuSubButton asChild onClick={() => {
+													parentID.current = item.id
+													handleOpen()
+												}} className="cursor-pointer">
 												<div>
 													<PlusIcon className="text-muted-foreground size-20" />
 													<span>Add Subcategory</span>
@@ -122,7 +125,10 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 						))
 					}
 					<SidebarMenuItem>
-						<SidebarMenuButton asChild onClick={handleOpen} className="cursor-pointer">
+						<SidebarMenuButton asChild onClick={() => {
+							parentID.current = ""
+							handleOpen()
+						}} className="cursor-pointer">
 							<div>
 								<PlusIcon className="text-muted-foreground size-20" />
 								<span>Add category</span>
