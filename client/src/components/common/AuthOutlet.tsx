@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import { Navbar } from ".";
-import { useDepot, useSupplier } from "@/context";
+import { useCategory, useDepot, useSupplier } from "@/context";
 import { useAxiosPrivate } from "@/hooks";
 import { AppSidebar } from "../app-sidebar";
 import { useErrorHandler } from "@/hooks";
@@ -12,6 +12,7 @@ const AuthOutlet = ({ children }: { children: React.ReactNode }) => {
 	const errorHandler = useErrorHandler()
 	const { setDepots } = useDepot()
 	const { setSuppliers } = useSupplier()
+	const { setCategories } = useCategory()
 	const axios = useAxiosPrivate()
 
 
@@ -27,6 +28,14 @@ const AuthOutlet = ({ children }: { children: React.ReactNode }) => {
 		axios.get("/supplier").then((res) => {
 			if (res && res.data && res.status && res.status === 200) {
 				setSuppliers([...res.data])
+			}
+		}).catch(error => {
+			errorHandler(error)
+		})
+
+		axios.get("/category").then((res) => {
+			if (res && res.data && res.status && res.status === 200) {
+				setCategories([...res.data])
 			}
 		}).catch(error => {
 			errorHandler(error)
