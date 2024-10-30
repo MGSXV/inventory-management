@@ -52,8 +52,35 @@ export class CategoryService {
 		}
 	}
 
-	findAll() {
-		return `This action returns all category`;
+	async findAll(user_id: string) {
+		try {
+			const categories = await this.prisma.category.findMany({
+				where: {
+					created_by_id: user_id,
+					state: EState.ACTIVE,
+					parentCategoryId: null
+				},
+				select: {
+					name: true,
+					description: true,
+					image_url: true,
+					parentCategoryId: true,
+					created_by_id: true,
+					childCategories: {
+						select: {
+							name: true,
+							description: true,
+							image_url: true,
+							parentCategoryId: true,
+							created_by_id: true,
+						}
+					}
+				}
+			});
+			return categories;
+		} catch (error) {
+			throw new Error(`CATEGORY.CREATE.${CATEGORY.FIND.GENERAL}`);
+		}
 	}
 
 	findOne(id: number) {

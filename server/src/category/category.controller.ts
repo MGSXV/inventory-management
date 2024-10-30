@@ -48,8 +48,16 @@ export class CategoryController {
 	}
 
 	@Get()
-	findAll() {
-		return this.categoryService.findAll();
+	async findAll(@GetCurrentUserID() userID: string) {
+		try {
+			return await this.categoryService.findAll(userID);
+		} catch (error) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: error.message,
+			}, HttpStatus.BAD_REQUEST);
+			
+		}
 	}
 
 	@Get(':id')
