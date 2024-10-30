@@ -4,7 +4,8 @@ export interface ICategory {
 	description?: string,
 	image_url?: string,
 	parentCategoryId: string | null,
-	created_by_id: ICategory[],
+	childCategories: ICategory[],
+	created_by_id: string,
 }
 
 export type TCategoryContext = {
