@@ -63,7 +63,6 @@ export class CategoryService {
 		try {
 			const categories = await this.prisma.category.findMany({
 				where: {
-					created_by_id: user_id,
 					parentCategoryId: null,
 					depot: {
 						users: {
