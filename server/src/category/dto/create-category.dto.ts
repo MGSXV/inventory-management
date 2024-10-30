@@ -19,5 +19,9 @@ export class CreateCategoryDto {
 	parent?: string;
 
 	@IsOptional()
+	@IsString()
+	depot_id: string;
+
+	@IsOptional()
 	file?: string;
 }
