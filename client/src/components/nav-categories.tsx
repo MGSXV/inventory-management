@@ -4,7 +4,7 @@ import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, Sideba
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ChevronRight, EditIcon, MoreHorizontal, PlusIcon, Trash2, ViewIcon } from "lucide-react"
 import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu"
-import { AddCategory } from "./category"
+import { AddCategory, DeleteCategory } from "./category"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
@@ -80,9 +80,12 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 											</DropdownMenuItem>
 											<DropdownMenuSeparator />
 											<DropdownMenuItem className="cursor-pointer"
-												onClick={() => handleDeleteDialogOpen(item.id)}>
+												onClick={() => {
+													parentID.current = ""
+													handleDeleteDialogOpen(item.id)
+												}}>
 												<Trash2 className="text-muted-foreground" />
-												<span>Delete Depot</span>
+												<span>Delete Category</span>
 											</DropdownMenuItem>
 										</DropdownMenuContent>
 									</DropdownMenu>
@@ -100,9 +103,46 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 														<SidebarMenuSubItem key={child.id}>
 															<SidebarMenuSubButton asChild>
 															<a href={`category/${child.id}`}>
+																<Avatar className="h-6 w-6 rounded-lg">
+																	<AvatarImage src={child.image_url} />
+																	<AvatarFallback className="rounded-lg uppercase">
+																		{`${child.name[0]}${child.name[1]}`}
+																	</AvatarFallback>
+																</Avatar>
 																<span>{child.name}</span>
 															</a>
 															</SidebarMenuSubButton>
+															<DropdownMenu>
+																<DropdownMenuTrigger asChild>
+																	<SidebarMenuAction showOnHover>
+																		<MoreHorizontal />
+																		<span className="sr-only">More</span>
+																	</SidebarMenuAction>
+																</DropdownMenuTrigger>
+																<DropdownMenuContent className="w-48" side={isMobile ? "bottom" : "right"}
+																	align={isMobile ? "end" : "start"}>
+																		<DropdownMenuItem>
+																			<ViewIcon className="text-muted-foreground" />
+																			<a href={`/category/${item.id}`}>
+																				<span>View Subcategory</span>
+																			</a>
+																		</DropdownMenuItem>
+																		<DropdownMenuItem className="cursor-pointer"
+																			onClick={() => handleEditDialog(item)}>
+																			<EditIcon className="text-muted-foreground" />
+																			<span>Edit Category</span>
+																		</DropdownMenuItem>
+																		<DropdownMenuSeparator />
+																		<DropdownMenuItem className="cursor-pointer"
+																			onClick={() => {
+																				parentID.current = item.id
+																				handleDeleteDialogOpen(child.id)
+																			}}>
+																			<Trash2 className="text-muted-foreground" />
+																			<span>Delete Catgory</span>
+																		</DropdownMenuItem>
+																</DropdownMenuContent>
+															</DropdownMenu>
 														</SidebarMenuSubItem>
 													))}
 												</Fragment>
@@ -138,6 +178,9 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 				</SidebarMenu>
 			</SidebarGroup>
 			<AddCategory isOpen={isAddDialogOpen} onOpenChange={handleOpen} parent_category={parentID.current} />
+			{selectedCategoryId.current &&
+				<DeleteCategory isOpen={isDeletDialogOpen} parent_id={parentID.current}
+					onOpenChange={setIsDeleteDialogOpen} id={selectedCategoryId.current} />}
 		</Fragment>
 	)
 }
