@@ -39,8 +39,6 @@ model Depot {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  categories Category[]
-
   created_by_id String?
   created_by    User?       @relation("DepotCreatedBy", fields: [created_by_id], references: [id])
   users         User[]
@@ -69,9 +67,6 @@ model Category {
 
   created_by_id String?
   created_by    User?   @relation("CategoryCreatedBy", fields: [created_by_id], references: [id])
-
-  depot_id String
-  depot    Depot  @relation(fields: [depot_id], references: [id])
 
   parentCategory   Category?  @relation("CategoryChildren", fields: [parentCategoryId], references: [id]) // Parent category relation
   parentCategoryId String? // Foreign key to parent category
