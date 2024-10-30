@@ -12,11 +12,17 @@ export class CategoryService {
 
 	async create(createCategoryDto: CreateCategoryDto, userID: string) {
 		try {
+			let depot_id = createCategoryDto.depot_id || null;
 			if (createCategoryDto.parent) {
-				const parent = await this.hasParentCategory(createCategoryDto.parent);
-				if (parent) {
+				const parent = await this.findOne(createCategoryDto.parent, userID);
+				if (parent && parent.parentCategory) {
 					throw new Error('CATEGORY.CREATE.PARENT_CATEGORY');
+				} else if (parent && !parent.parentCategory) {
+					depot_id = parent.depot.id;
 				}
+			}
+			if (!depot_id) {
+				throw new Error('CATEGORY.CREATE.DEPOT_ID');
 			}
 			const categories = this.prisma.category.create({
 				data: {
@@ -25,6 +31,7 @@ export class CategoryService {
 					image_url: createCategoryDto.file || null,
 					parentCategoryId: createCategoryDto.parent || null,
 					created_by_id: userID,
+					depot_id: depot_id,
 					state: EState.ACTIVE
 				},
 				select: {
@@ -57,8 +64,12 @@ export class CategoryService {
 			const categories = await this.prisma.category.findMany({
 				where: {
 					created_by_id: user_id,
-					state: EState.ACTIVE,
-					parentCategoryId: null
+					parentCategoryId: null,
+					depot: {
+						users: {
+							some: { id: user_id }
+						}
+					}
 				},
 				select: {
 					id: true,
@@ -76,6 +87,17 @@ export class CategoryService {
 							parentCategoryId: true,
 							created_by_id: true,
 						}
+					},
+					depot: {
+						select: {
+							id: true,
+							name: true,
+							description: true,
+							image_url: true,
+							created_by_id: true,
+							created_at: true,
+							updated_at: true,
+						}
 					}
 				}
 			});
@@ -92,9 +114,7 @@ export class CategoryService {
 					id: id,
 					depot: {
 						users: {
-							some: {
-								id: user_id
-							}
+							some: { id: user_id }
 						}
 					}
 				},
@@ -150,14 +170,5 @@ export class CategoryService {
 
 	remove(id: number) {
 		return `This action removes a #${id} category`;
-	}
-
-	private async hasParentCategory(id: string) {
-		const category = await this.prisma.category.findFirst({
-			where: {
-				id: id
-			}
-		});
-		return category
 	}
 }
