@@ -30,7 +30,6 @@ export const EditSupplier = ({ isOpen, onOpenChange, supplier }:
 			headers: { "Content-Type": "multipart/form-data" },
 			withCredentials: true
 		}).then(response => {
-			console.log(response)
 			const new_suppliers = suppliers.map(supplier => supplier.id === response.data.id ? response.data : supplier)
 			setSuppliers(new_suppliers)
 			toast({
