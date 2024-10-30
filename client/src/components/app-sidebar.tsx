@@ -14,6 +14,7 @@ import {
 import { useAuth } from "@/hooks"
 import { useDepot, useSupplier } from "@/context"
 import { NavSuppliers } from "./nav-suppliers"
+import { NavCategories } from "./nav-categories"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
@@ -43,6 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarContent>
 				<NavDepots depots={depots} />
 				<NavSuppliers suppliers={suppliers} />
+				<NavCategories categories={[]} />
 			</SidebarContent>
 			<SidebarFooter>
 				<NavUser user={user} />
