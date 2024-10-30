@@ -16,6 +16,7 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 	const handleOpen = () => setIsAddDialogOpen(!isAddDialogOpen)
 
 	const selectedCategoryId = useRef("")
+	const parentID = useRef("")
 	const selectedCategory = useRef<ICategory | null >(null)
 
 	const handleEditDialog = (category: ICategory) => {
@@ -107,10 +108,10 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 												</Fragment>
 											)}
 											<SidebarMenuSubItem>
-												<SidebarMenuSubButton asChild>
+												<SidebarMenuSubButton asChild onClick={handleOpen} className="cursor-pointer">
 												<div>
 													<PlusIcon className="text-muted-foreground size-20" />
-													<span>Add sub-category</span>
+													<span>Add Subcategory</span>
 												</div>
 												</SidebarMenuSubButton>
 											</SidebarMenuSubItem>
@@ -130,7 +131,7 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarGroup>
-			<AddCategory isOpen={isAddDialogOpen} onOpenChange={handleOpen} />
+			<AddCategory isOpen={isAddDialogOpen} onOpenChange={handleOpen} parent_category={parentID.current} />
 		</Fragment>
 	)
 }
