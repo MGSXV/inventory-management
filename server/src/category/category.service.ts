@@ -13,8 +13,8 @@ export class CategoryService {
 	async create(createCategoryDto: CreateCategoryDto, userID: string) {
 		try {
 			if (createCategoryDto.parent) {
-				const is_second_level = await this.hasParentCategory(createCategoryDto.parent);
-				if (is_second_level) {
+				const parent = await this.hasParentCategory(createCategoryDto.parent);
+				if (parent) {
 					throw new Error('CATEGORY.CREATE.PARENT_CATEGORY');
 				}
 			}
@@ -85,8 +85,63 @@ export class CategoryService {
 		}
 	}
 
-	findOne(id: number) {
-		return `This action returns a #${id} category`;
+	async findOne(id: string, user_id: string) {
+		try {
+			const category = await this.prisma.category.findFirst({
+				where: {
+					id: id,
+					depot: {
+						users: {
+							some: {
+								id: user_id
+							}
+						}
+					}
+				},
+				select: {
+					id: true,
+					name: true,
+					description: true,
+					image_url: true,
+					parentCategoryId: true,
+					created_by_id: true,
+					parentCategory: {
+						select: {
+							id: true,
+							name: true,
+							description: true,
+							image_url: true,
+							parentCategoryId: true,
+							created_by_id: true,
+						}
+					},
+					childCategories: {
+						select: {
+							id: true,
+							name: true,
+							description: true,
+							image_url: true,
+							parentCategoryId: true,
+							created_by_id: true,
+						}
+					},
+					depot: {
+						select: {
+							id: true,
+							name: true,
+							description: true,
+							image_url: true,
+							created_by_id: true,
+							created_at: true,
+							updated_at: true,
+						}
+					}
+				}
+			})
+			return category;
+		} catch (error) {
+			throw new Error(`CATEGORY.CREATE.${CATEGORY.FIND.GENERAL}`);
+		};
 	}
 
 	update(id: number, updateCategoryDto: UpdateCategoryDto) {
@@ -103,6 +158,6 @@ export class CategoryService {
 				id: id
 			}
 		});
-		return category?.parentCategoryId ? true : false;
+		return category
 	}
 }
