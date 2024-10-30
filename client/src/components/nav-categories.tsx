@@ -1,11 +1,11 @@
 import { ICategory } from "@/types"
 import { Fragment, useRef, useState } from "react"
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
+import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, useSidebar } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { EditIcon, MoreHorizontal, PlusIcon, Trash2, ViewIcon } from "lucide-react"
-import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu"
+import { ChevronRight, EditIcon, MoreHorizontal, PlusIcon, Trash2, ViewIcon } from "lucide-react"
+import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu"
 import { AddCategory } from "./category"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 
@@ -44,47 +44,80 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 					</SidebarMenuItem>
 					{
 						categories.map(item => (
-							<SidebarMenuItem key={item.id}>
-								<SidebarMenuButton asChild>
-									<a href={`/category/${item.id}`}>
-										<Avatar className="h-6 w-6 rounded-lg">
-											<AvatarImage src={item.image_url} />
-											<AvatarFallback className="rounded-lg uppercase">
-												{`${item.name[0]}${item.name[1]}`}
-											</AvatarFallback>
-										</Avatar>
-										<span>{item.name}</span>
-									</a>
-								</SidebarMenuButton>
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<SidebarMenuAction showOnHover>
-											<MoreHorizontal />
-											<span className="sr-only">More</span>
+							<Collapsible key={item.id} asChild defaultOpen={false}>
+								<SidebarMenuItem key={item.id}>
+									<SidebarMenuButton asChild>
+										<a href={`/category/${item.id}`}>
+											<Avatar className="h-6 w-6 rounded-lg">
+												<AvatarImage src={item.image_url} />
+												<AvatarFallback className="rounded-lg uppercase">
+													{`${item.name[0]}${item.name[1]}`}
+												</AvatarFallback>
+											</Avatar>
+											<span>{item.name}</span>
+										</a>
+									</SidebarMenuButton>
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild className="right-7">
+											<SidebarMenuAction showOnHover>
+												<MoreHorizontal />
+												<span className="sr-only">More</span>
+											</SidebarMenuAction>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent className="w-48" side={isMobile ? "bottom" : "right"}
+											align={isMobile ? "end" : "start"}>
+											<DropdownMenuItem>
+												<ViewIcon className="text-muted-foreground" />
+												<a href={`/category/${item.id}`}>
+													<span>View Category</span>
+												</a>
+											</DropdownMenuItem>
+											<DropdownMenuItem className="cursor-pointer"
+												onClick={() => handleEditDialog(item)}>
+												<EditIcon className="text-muted-foreground" />
+												<span>Edit Category</span>
+											</DropdownMenuItem>
+											<DropdownMenuSeparator />
+											<DropdownMenuItem className="cursor-pointer"
+												onClick={() => handleDeleteDialogOpen(item.id)}>
+												<Trash2 className="text-muted-foreground" />
+												<span>Delete Depot</span>
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+									<CollapsibleTrigger asChild className="right-1">
+										<SidebarMenuAction className="data-[state=open]:rotate-90">
+											<ChevronRight />
+											<span className="sr-only">Toggle</span>
 										</SidebarMenuAction>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent className="w-48" side={isMobile ? "bottom" : "right"}
-										align={isMobile ? "end" : "start"}>
-										<DropdownMenuItem>
-											<ViewIcon className="text-muted-foreground" />
-											<a href={`/category/${item.id}`}>
-												<span>View Category</span>
-											</a>
-										</DropdownMenuItem>
-										<DropdownMenuItem className="cursor-pointer"
-											onClick={() => handleEditDialog(item)}>
-											<EditIcon className="text-muted-foreground" />
-											<span>Edit Category</span>
-										</DropdownMenuItem>
-										<DropdownMenuSeparator />
-										<DropdownMenuItem className="cursor-pointer"
-											onClick={() => handleDeleteDialogOpen(item.id)}>
-											<Trash2 className="text-muted-foreground" />
-											<span>Delete Depot</span>
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</SidebarMenuItem>
+									</CollapsibleTrigger>
+									<CollapsibleContent>
+										<SidebarMenuSub>
+											{item.childCategories && item.childCategories.length > 0 && (
+												<Fragment>
+													{item.childCategories.map(child => (
+														<SidebarMenuSubItem key={child.id}>
+															<SidebarMenuSubButton asChild>
+															<a href={`category/${child.id}`}>
+																<span>{child.name}</span>
+															</a>
+															</SidebarMenuSubButton>
+														</SidebarMenuSubItem>
+													))}
+												</Fragment>
+											)}
+											<SidebarMenuSubItem>
+												<SidebarMenuSubButton asChild>
+												<div>
+													<PlusIcon className="text-muted-foreground size-20" />
+													<span>Add sub-category</span>
+												</div>
+												</SidebarMenuSubButton>
+											</SidebarMenuSubItem>
+										</SidebarMenuSub>
+									</CollapsibleContent>
+								</SidebarMenuItem>
+							</Collapsible>
 						))
 					}
 					<SidebarMenuItem>
