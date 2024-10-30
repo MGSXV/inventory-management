@@ -29,6 +29,7 @@ export class CategoryService {
 					state: EState.ACTIVE
 				},
 				select: {
+					id: true,
 					name: true,
 					description: true,
 					image_url: true,
@@ -36,6 +37,7 @@ export class CategoryService {
 					created_by_id: true,
 					parentCategory: {
 						select: {
+							id: true,
 							name: true,
 							description: true,
 							image_url: true,
@@ -61,6 +63,7 @@ export class CategoryService {
 					parentCategoryId: null
 				},
 				select: {
+					id: true,
 					name: true,
 					description: true,
 					image_url: true,
@@ -68,6 +71,7 @@ export class CategoryService {
 					created_by_id: true,
 					childCategories: {
 						select: {
+							id: true,
 							name: true,
 							description: true,
 							image_url: true,
