@@ -1,0 +1,99 @@
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { ICategoryInfo } from "@/types"
+import { useAxiosPrivate, useErrorHandler, useToast } from "@/hooks"
+import { useCategory } from "@/context"
+
+export const AddCategory = ({ isOpen, onOpenChange, parent_category }:
+	{ isOpen: boolean, parent_category: string, onOpenChange: (open: boolean) => void }) => {
+
+	const [isLoading, setIsLoading] = useState(false)
+	const { register, handleSubmit, formState: { errors }, reset } = useForm<ICategoryInfo>()
+	const axios = useAxiosPrivate()
+	const errorHandler = useErrorHandler()
+	const { toast } = useToast()
+	const { categories, setCategories } = useCategory()
+
+	const onSubmit = async (data: ICategoryInfo) => {
+		setIsLoading(true)
+		const formData = new FormData()
+		formData.append("name", data.name)
+		if (data.description) formData.append('description', data.description);
+		const fileInput = (data.picture as unknown as FileList)?.[0];
+		if (data.picture) formData.append('file', fileInput);
+		if (parent_category !== "") formData.append('parent', parent_category);
+		axios.post("/category", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data"
+			}, withCredentials: true
+		}).then(response => {
+			if (response && response.data && response.status && response.status === 201) {
+				setCategories([...categories, response.data])
+				toast({
+					title: "Success",
+					description: "Category added successfully",
+					variant: "default",
+				})
+				onOpenChange(false)
+			}
+		}).catch(error => {
+			errorHandler(error)
+		}).finally(() => {
+			setIsLoading(false)
+		})
+	}
+
+	useEffect(() => {
+		if (isOpen)
+			reset();
+	}, [isOpen])
+	
+	return (
+		<Dialog open={isOpen} onOpenChange={onOpenChange}>
+			<DialogContent className="sm:max-w-[425px]">
+				<DialogHeader>
+					<DialogTitle>Add new category</DialogTitle>
+					<DialogDescription>
+						Add a new category by adding a name, optionallu a description and an image
+					</DialogDescription>
+				</DialogHeader>
+				<div className="grid gap-4 py-4">
+					<div className="grid grid-cols-4 items-center gap-4">
+						<Label htmlFor="name" className="text-right">
+							Name <span className="text-destructive">*</span>
+						</Label>
+						<Input id="name" placeholder="New category" className="col-span-3" disabled={isLoading}
+							{...register("name", { required: true, minLength: 4, maxLength: 20})}
+							aria-invalid={errors.name ? true : false } />
+					</div>
+					<div className="grid grid-cols-4 items-start gap-4">
+						<Label htmlFor="description" className="text-right">
+						description
+						</Label>
+						<Textarea id="description" placeholder="description" className="col-span-3"
+							{...register("description", { required: false, minLength: 4, maxLength: 200})}
+							aria-invalid={errors.description ? true : false } disabled={isLoading} />
+					</div>
+					<div className="grid grid-cols-4 items-start gap-4">
+						<Label htmlFor="picture">Picture</Label>
+						<Input id="picture" type="file" className="col-span-3" disabled={isLoading}
+							{...register("picture")} aria-invalid={errors.picture ? true : false } />
+					</div>
+				</div>
+				<DialogFooter>
+					<Button type="submit" onClick={handleSubmit(onSubmit)} disabled={isLoading}>
+						Add new category
+					</Button>
+					<Button variant="secondary" onClick={() => onOpenChange(false)} disabled={isLoading}>
+						Cancel
+					</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	)
+}
