@@ -17,7 +17,7 @@ export const AddCategory = ({ isOpen, onOpenChange, parent_category }:
 	const axios = useAxiosPrivate()
 	const errorHandler = useErrorHandler()
 	const { toast } = useToast()
-	const { categories, setCategories } = useCategory()
+	const { setCategories } = useCategory()
 
 	const onSubmit = async (data: ICategoryInfo) => {
 		setIsLoading(true)
@@ -33,7 +33,7 @@ export const AddCategory = ({ isOpen, onOpenChange, parent_category }:
 			}, withCredentials: true
 		}).then(response => {
 			if (response && response.data && response.status && response.status === 201) {
-				setCategories([...categories, response.data])
+				setCategories([...response.data])
 				toast({
 					title: "Success",
 					description: "Category added successfully",
