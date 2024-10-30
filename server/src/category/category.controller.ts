@@ -61,8 +61,15 @@ export class CategoryController {
 	}
 
 	@Get(':id')
-	findOne(@Param('id') id: string) {
-		return this.categoryService.findOne(+id);
+	async findOne(@Param('id') id: string, @GetCurrentUserID() userID: string) {
+		try {
+			return await this.categoryService.findOne(id, userID);
+		} catch (error) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: error.message,
+			}, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@Patch(':id')
