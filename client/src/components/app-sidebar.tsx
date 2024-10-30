@@ -12,7 +12,7 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/hooks"
-import { useDepot, useSupplier } from "@/context"
+import { useCategory, useDepot, useSupplier } from "@/context"
 import { NavSuppliers } from "./nav-suppliers"
 import { NavCategories } from "./nav-categories"
 
@@ -21,6 +21,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { user } = useAuth()
 	const { depots } = useDepot()
 	const { suppliers } = useSupplier()
+	const { categories } = useCategory()
 
 	return (
 		<Sidebar variant="floating" collapsible="icon" {...props}>
@@ -44,7 +45,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarContent>
 				<NavDepots depots={depots} />
 				<NavSuppliers suppliers={suppliers} />
-				<NavCategories categories={[]} />
+				<NavCategories categories={categories} />
 			</SidebarContent>
 			<SidebarFooter>
 				<NavUser user={user} />
