@@ -11,7 +11,6 @@ export class CategoryService {
 	constructor(private prisma: PrismaService) {}
 
 	async create(createCategoryDto: CreateCategoryDto, userID: string) {
-
 		try {
 			if (createCategoryDto.parent) {
 				const is_second_level = await this.hasParentCategory(createCategoryDto.parent);
@@ -19,7 +18,7 @@ export class CategoryService {
 					throw new Error('CATEGORY.CREATE.PARENT_CATEGORY');
 				}
 			}
-			const category = this.prisma.category.create({
+			const categories = this.prisma.category.create({
 				data: {
 					name: createCategoryDto.name,
 					description: createCategoryDto.description,
@@ -46,9 +45,8 @@ export class CategoryService {
 						}
 					}
 				}
-			}).then(category => category)
-				.catch(() => {throw new Error(`CATEGORY.CREATE.${CATEGORY.CREATE.GENERAL}`)});
-			return category;
+			}).then(async () => await this.findAll(userID)).catch(() => {throw new Error(`CATEGORY.CREATE.${CATEGORY.CREATE.GENERAL}`)});
+			return categories
 		} catch (error) {
 			throw new Error(error.message);
 		}
@@ -105,6 +103,6 @@ export class CategoryService {
 				id: id
 			}
 		});
-		return category
+		return category?.parentCategoryId ? true : false;
 	}
 }
