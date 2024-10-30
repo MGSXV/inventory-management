@@ -22,6 +22,10 @@ const AuthOutlet = ({ children }: { children: React.ReactNode }) => {
 				setDepots([...res.data])
 			}
 		}).catch(error => {
+			if (error.response && error.response.status === 401) {
+				localStorage.removeItem("token")
+				window.location.reload()
+			}
 			errorHandler(error)
 		})
 
