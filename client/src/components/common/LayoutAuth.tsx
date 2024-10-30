@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom"
 import { SidebarProvider } from "@/components/ui/sidebar"
-import { DepotProvider, SupplierProvider } from "@/context"
+import { CategoryProvider, DepotProvider, SupplierProvider } from "@/context"
 import AuthOutlet from "./AuthOutlet"
 
 const LayoutAuth = () => {
@@ -8,9 +8,11 @@ const LayoutAuth = () => {
 		<SidebarProvider>
 			<DepotProvider>
 				<SupplierProvider>
-					<AuthOutlet>
-						<Outlet />
-					</AuthOutlet>
+					<CategoryProvider>
+						<AuthOutlet>
+							<Outlet />
+						</AuthOutlet>
+					</CategoryProvider>
 				</SupplierProvider>
 			</DepotProvider>
 		</SidebarProvider>
