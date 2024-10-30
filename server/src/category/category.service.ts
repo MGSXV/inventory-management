@@ -50,8 +50,6 @@ export class CategoryService {
 		} catch (error) {
 			throw new Error(error.message);
 		}
-
-		return 'This action adds a new category';
 	}
 
 	findAll() {
