@@ -13,6 +13,10 @@ export class CreateSupplierDto {
 	@MaxLength(200, { message: `SUPPLIER.CREATE.DESCRIPTION.${SUPPLIER.CREATE.DESCRIPTION.MAX_LENGTH}` })
 	description?: string;
 
+	@IsString()
+	@IsNotEmpty({ message: `SUPPLIER.CREATE.DEPOT_ID.${SUPPLIER.CREATE.DEPOT_ID.REQUIRED}` })
+	depot_id: string;
+
 	@IsOptional()
 	file?: string;
 }

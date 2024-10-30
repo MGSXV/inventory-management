@@ -18,7 +18,8 @@ export class SupplierService {
 					description: createSupplierDto.description,
 					image_url: createSupplierDto.file || null,
 					state: EState.ACTIVE,
-					created_by_id: user_id
+					created_by_id: user_id,
+					depot_id: createSupplierDto.depot_id
 				}
 			})
 		} catch (error) {
