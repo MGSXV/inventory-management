@@ -163,8 +163,71 @@ export class CategoryService {
 		};
 	}
 
-	update(id: number, updateCategoryDto: UpdateCategoryDto) {
-		return `This action updates a #${id} category`;
+	async update(id: string, user_id: string, updateCategoryDto: UpdateCategoryDto) {
+		const is_valid = await this.prisma.category.findFirst({
+			where: {
+				id: id,
+				created_by_id: user_id
+			}
+		});
+		if (!is_valid) {
+			throw new Error(`CATEGORY.UPDATE.${CATEGORY.UPDATE.NO_SUPPLIER_FOUND}`);
+		}
+		try {
+			const category = await this.prisma.category.update({
+				where: {
+					id: id,
+					created_by_id: user_id
+				},
+				data: {
+					name: updateCategoryDto.name,
+					description: updateCategoryDto.description,
+					image_url: updateCategoryDto.file || is_valid.image_url,
+				},
+				select: {
+					id: true,
+					name: true,
+					description: true,
+					image_url: true,
+					parentCategoryId: true,
+					created_by_id: true,
+					parentCategory: {
+						select: {
+							id: true,
+							name: true,
+							description: true,
+							image_url: true,
+							parentCategoryId: true,
+							created_by_id: true,
+						}
+					},
+					childCategories: {
+						select: {
+							id: true,
+							name: true,
+							description: true,
+							image_url: true,
+							parentCategoryId: true,
+							created_by_id: true,
+						}
+					},
+					depot: {
+						select: {
+							id: true,
+							name: true,
+							description: true,
+							image_url: true,
+							created_by_id: true,
+							created_at: true,
+							updated_at: true,
+						}
+					}
+				}
+			});
+			return category;
+		} catch (error) {
+			throw new Error(`CATEGORY.CREATE.${CATEGORY.UPDATE.GENERAL}`);
+		}
 	}
 
 	async remove(id: string, user_id: string) {

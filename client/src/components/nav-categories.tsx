@@ -4,7 +4,7 @@ import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, Sideba
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ChevronRight, EditIcon, MoreHorizontal, PlusIcon, Trash2, ViewIcon } from "lucide-react"
 import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu"
-import { AddCategory, DeleteCategory } from "./category"
+import { AddCategory, DeleteCategory, EditCategory } from "./category"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
@@ -123,12 +123,15 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 																	align={isMobile ? "end" : "start"}>
 																		<DropdownMenuItem>
 																			<ViewIcon className="text-muted-foreground" />
-																			<a href={`/category/${item.id}`}>
+																			<a href={`/category/${child.id}`}>
 																				<span>View Subcategory</span>
 																			</a>
 																		</DropdownMenuItem>
 																		<DropdownMenuItem className="cursor-pointer"
-																			onClick={() => handleEditDialog(item)}>
+																			onClick={() => {
+																				parentID.current = item.id
+																				handleEditDialog(child)
+																			}}>
 																			<EditIcon className="text-muted-foreground" />
 																			<span>Edit Category</span>
 																		</DropdownMenuItem>
@@ -181,6 +184,9 @@ export const NavCategories = ({ categories }: { categories: ICategory[] }) => {
 			{selectedCategoryId.current &&
 				<DeleteCategory isOpen={isDeletDialogOpen} parent_id={parentID.current}
 					onOpenChange={setIsDeleteDialogOpen} id={selectedCategoryId.current} />}
+			{selectedCategory.current &&
+				<EditCategory isOpen={isEditDialogOpen} parent_id={parentID.current}
+					category={selectedCategory.current} onOpenChange={setIsEditDialogOpen} />}
 		</Fragment>
 	)
 }

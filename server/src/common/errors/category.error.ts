@@ -33,4 +33,8 @@ export
 	DELETE: {
 		GENERAL: 'GENERAL',
 	},
+	UPDATE: {
+		NO_SUPPLIER_FOUND: 'NO_SUPPLIER_FOUND',
+		GENERAL: 'GENERAL',
+	},
 };

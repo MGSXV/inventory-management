@@ -24,7 +24,7 @@ export class CategoryController {
 			if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
 				cb(null, true);
 			} else {
-				cb(new BadRequestException(`SUPPLIER.CREATE.IMAGE_URL.${CATEGORY.CREATE.IMAGE_URL.INVALID_FILE_TYPE}`), false);
+				cb(new BadRequestException(`CATEGORY.CREATE.IMAGE_URL.${CATEGORY.CREATE.IMAGE_URL.INVALID_FILE_TYPE}`), false);
 			}
 		}
 	}))
@@ -73,8 +73,30 @@ export class CategoryController {
 	}
 
 	@Patch(':id')
-	update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-		return this.categoryService.update(+id, updateCategoryDto);
+	@UseInterceptors(FileInterceptor('file', {
+		limits: { fileSize: MAX_FILE_SIZE },
+		fileFilter: (req, file, cb) => {
+			if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+				cb(null, true);
+			} else {
+				cb(new BadRequestException(`CATEGORY.CREATE.IMAGE_URL.${CATEGORY.CREATE.IMAGE_URL.INVALID_FILE_TYPE}`), false);
+			}
+		}
+	}))
+	async update(
+		@Param('id') id: string,
+		@Body() updateCategoryDto: UpdateCategoryDto,
+		@GetCurrentUserID() userID: string,
+		@UploadedFile() file: Express.Multer.File
+	) {
+		try {
+			return await this.categoryService.update(id, userID, updateCategoryDto);
+		} catch (error) {
+			throw new HttpException({
+				status: HttpStatus.BAD_REQUEST,
+				error: error.message,
+			}, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@Delete(':id')
